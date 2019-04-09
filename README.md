@@ -1,5 +1,7 @@
 ## Tork
-Tork is  a semi realistic vehicle physics system
+Tork is  a semi realistic vehicle physics system. [Demo video](https://www.youtube.com/watch?v=gso45Zg_Z_Q)
+
+It is being developed for [Project Torqe](https://forum.unity.com/threads/project-torque-offroad-racer-update-custom-wheel-colliders-and-physics.652135/#post-4379842). You can join its Discord server [here](https://discord.gg/bKp6VhX).
 
 ## Docs
 Coming soon
