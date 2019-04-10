@@ -2766,15 +2766,15 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4013073016293618, guid: 02e641040fb499c49a848e40f535164a, type: 2}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4013073016293618, guid: 02e641040fb499c49a848e40f535164a, type: 2}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4013073016293618, guid: 02e641040fb499c49a848e40f535164a, type: 2}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: 0.000000014901161
       objectReference: {fileID: 0}
     - target: {fileID: 4013073016293618, guid: 02e641040fb499c49a848e40f535164a, type: 2}
       propertyPath: m_LocalRotation.w
@@ -2848,6 +2848,87 @@ Prefab:
         type: 2}
       propertyPath: rollingFriction
       value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114785152976159122, guid: 02e641040fb499c49a848e40f535164a,
+        type: 2}
+      propertyPath: axles.Array.data[0].force
+      value: 36000
+      objectReference: {fileID: 0}
+    - target: {fileID: 114785152976159122, guid: 02e641040fb499c49a848e40f535164a,
+        type: 2}
+      propertyPath: axles.Array.data[1].force
+      value: 36000
+      objectReference: {fileID: 0}
+    - target: {fileID: 114171606278845630, guid: 02e641040fb499c49a848e40f535164a,
+        type: 2}
+      propertyPath: m_MaxSteeringAngleVsSpeed.m_Curve.Array.data[1].time
+      value: 249.55688
+      objectReference: {fileID: 0}
+    - target: {fileID: 114171606278845630, guid: 02e641040fb499c49a848e40f535164a,
+        type: 2}
+      propertyPath: m_MaxSteeringAngleVsSpeed.m_Curve.Array.data[1].value
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114171606278845630, guid: 02e641040fb499c49a848e40f535164a,
+        type: 2}
+      propertyPath: m_MaxSteeringAngleVsSpeed.m_Curve.Array.data[0].inSlope
+      value: -0.35978705
+      objectReference: {fileID: 0}
+    - target: {fileID: 114171606278845630, guid: 02e641040fb499c49a848e40f535164a,
+        type: 2}
+      propertyPath: m_MaxSteeringAngleVsSpeed.m_Curve.Array.data[0].outSlope
+      value: -0.35978705
+      objectReference: {fileID: 0}
+    - target: {fileID: 114171606278845630, guid: 02e641040fb499c49a848e40f535164a,
+        type: 2}
+      propertyPath: m_MaxSteeringAngleVsSpeed.m_Curve.Array.data[1].inSlope
+      value: -0.008692189
+      objectReference: {fileID: 0}
+    - target: {fileID: 114171606278845630, guid: 02e641040fb499c49a848e40f535164a,
+        type: 2}
+      propertyPath: m_MaxSteeringAngleVsSpeed.m_Curve.Array.data[1].outSlope
+      value: -0.008692189
+      objectReference: {fileID: 0}
+    - target: {fileID: 4013073016293618, guid: 02e641040fb499c49a848e40f535164a, type: 2}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4252074655309166, guid: 02e641040fb499c49a848e40f535164a, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: -0.67383385
+      objectReference: {fileID: 0}
+    - target: {fileID: 4252074655309166, guid: 02e641040fb499c49a848e40f535164a, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: -0.31997797
+      objectReference: {fileID: 0}
+    - target: {fileID: 4944351361650126, guid: 02e641040fb499c49a848e40f535164a, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0.6706066
+      objectReference: {fileID: 0}
+    - target: {fileID: 4944351361650126, guid: 02e641040fb499c49a848e40f535164a, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: -0.31997797
+      objectReference: {fileID: 0}
+    - target: {fileID: 4068913174666622, guid: 02e641040fb499c49a848e40f535164a, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0.6740856
+      objectReference: {fileID: 0}
+    - target: {fileID: 4068913174666622, guid: 02e641040fb499c49a848e40f535164a, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: -0.32833007
+      objectReference: {fileID: 0}
+    - target: {fileID: 4288716715881080, guid: 02e641040fb499c49a848e40f535164a, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: -0.67383385
+      objectReference: {fileID: 0}
+    - target: {fileID: 4288716715881080, guid: 02e641040fb499c49a848e40f535164a, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: -0.32833
+      objectReference: {fileID: 0}
+    - target: {fileID: 114791909779558762, guid: 02e641040fb499c49a848e40f535164a,
+        type: 2}
+      propertyPath: drawLevel
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 02e641040fb499c49a848e40f535164a, type: 2}

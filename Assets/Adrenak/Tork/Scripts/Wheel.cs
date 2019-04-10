@@ -230,10 +230,14 @@ namespace Adrenak.Tork {
 			Vector3 side = transform.right;
 			Vector3 forward = transform.forward;
 
+			// Apply less force if the vehicle is tilted
+			var angle = Vector3.Angle(normal, transform.up);
+			var multiplier = Mathf.Cos(angle * Mathf.Deg2Rad);
+
 			// Calculate sliding velocity (velocity without normal force)
 			Velocity = rigidbody.GetPointVelocity(Hit.point);
-			Vector3 sideVel = Vector3.Dot(Velocity, side) * side;
-			Vector3 forwardVel = Vector3.Dot(Velocity, forward) * forward;
+			Vector3 sideVel = Vector3.Dot(Velocity, side) * side * multiplier;
+			Vector3 forwardVel = Vector3.Dot(Velocity, forward) * forward * multiplier;
 			Vector3 velocity2D = sideVel + forwardVel;
 
 			Vector3 momentum = velocity2D * rigidbody.mass;
