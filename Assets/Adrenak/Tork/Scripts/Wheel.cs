@@ -93,9 +93,14 @@ namespace Adrenak.Tork {
 		/// </summary>
 		public bool fakeNormals;
 
-
+		/// <summary>
+		/// The layers used for wheel raycast
+		/// </summary>
 		public LayerMask m_RaycastLayers;
 
+		/// <summary>
+		/// The velocity of the wheel (at the raycast hit point) in world space
+		/// </summary>
 		public Vector3 Velocity { get; private set; }
 
 		/// <summary>
@@ -223,6 +228,8 @@ namespace Adrenak.Tork {
 		}
 
 		void CalculateFriction() {
+			Velocity = rigidbody.GetPointVelocity(Hit.point);
+
 			if (!isGrounded) return;
 
 			// Contact basis (can be different from wheel basis)
@@ -235,7 +242,6 @@ namespace Adrenak.Tork {
 			var multiplier = Mathf.Cos(angle * Mathf.Deg2Rad);
 
 			// Calculate sliding velocity (velocity without normal force)
-			Velocity = rigidbody.GetPointVelocity(Hit.point);
 			Vector3 sideVel = Vector3.Dot(Velocity, side) * side * multiplier;
 			Vector3 forwardVel = Vector3.Dot(Velocity, forward) * forward * multiplier;
 			Vector3 velocity2D = sideVel + forwardVel;
