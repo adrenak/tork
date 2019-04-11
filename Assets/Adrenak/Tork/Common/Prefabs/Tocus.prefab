@@ -695,8 +695,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1610265466720824}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 21.3, y: 0.87, z: 44.7}
+  m_LocalRotation: {x: -0, y: -0, z: 0.00000056624407, w: 1}
+  m_LocalPosition: {x: 21.3, y: 1.5, z: 44.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4496999505078164}
@@ -792,7 +792,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1977516303058092}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.6740856, y: -0.32833004, z: 1.3748474}
+  m_LocalPosition: {x: 0.67408556, y: -0.3283301, z: 1.3748474}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4496999505078164}
@@ -844,7 +844,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1188388582976854}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.67383385, y: -0.319978, z: -1.2387543}
+  m_LocalPosition: {x: -0.6738339, y: -0.31997794, z: -1.2387543}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4496999505078164}
@@ -857,7 +857,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1700848266281518}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.67383385, y: -0.32833004, z: 1.3748474}
+  m_LocalPosition: {x: -0.6738339, y: -0.32832998, z: 1.3748474}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4496999505078164}
@@ -1242,7 +1242,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1311625568297806}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.6706066, y: -0.319978, z: -1.2387543}
+  m_LocalPosition: {x: 0.67060655, y: -0.31997794, z: -1.2387543}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4496999505078164}
@@ -2498,7 +2498,7 @@ MonoBehaviour:
   stiffness: 12000
   damping: 8000
   relaxRate: 0.5
-  sidewaysGrip: 1.5
+  sidewaysGrip: 1
   forwardGrip: 1
   rollingFriction: 0.1
   fakeNormals: 1
@@ -2521,7 +2521,7 @@ MonoBehaviour:
   stiffness: 12000
   damping: 8000
   relaxRate: 0.5
-  sidewaysGrip: 1.5
+  sidewaysGrip: 1
   forwardGrip: 1
   rollingFriction: 0.1
   fakeNormals: 1
@@ -2554,10 +2554,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Rigidbody: {fileID: 54431275576647492}
-  m_Steering: {fileID: 114419266858620230}
-  m_Motor: {fileID: 114987651533829920}
-  m_Brake: {fileID: 114373255192414712}
-  m_Aerodynamics: {fileID: 114739371041880458}
   m_MaxReverseInput: -0.5
   m_MotorTorqueVsSpeed:
     serializedVersion: 2
@@ -2583,14 +2579,14 @@ MonoBehaviour:
     - serializedVersion: 2
       time: 0
       value: 30
-      inSlope: -0.37918463
-      outSlope: -0.37918463
+      inSlope: -0.35978705
+      outSlope: -0.35978705
       tangentMode: 0
     - serializedVersion: 2
-      time: 249.77856
+      time: 249.55688
       value: 5
-      inSlope: -0.02494358
-      outSlope: -0.02494358
+      inSlope: -0.008692189
+      outSlope: -0.008692189
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
@@ -2624,7 +2620,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91301881b4e44114090ead2d22e0fa15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxTorque: 5000
+  maxTorque: 20000
   value: 0
   m_FrontRight: {fileID: 114134873722668098}
   m_FrontLeft: {fileID: 114658946717326374}
@@ -2686,7 +2682,7 @@ MonoBehaviour:
   stiffness: 12000
   damping: 8000
   relaxRate: 0.5
-  sidewaysGrip: 1.5
+  sidewaysGrip: 1
   forwardGrip: 1
   rollingFriction: 0.1
   fakeNormals: 1
@@ -2709,7 +2705,7 @@ MonoBehaviour:
   stiffness: 12000
   damping: 8000
   relaxRate: 0.5
-  sidewaysGrip: 1.5
+  sidewaysGrip: 1
   forwardGrip: 1
   rollingFriction: 0.1
   fakeNormals: 1
@@ -2770,7 +2766,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53113b735cef849498b153d0a11363e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  drawLevel: 2
+  drawLevel: 1
   m_FrontRight: {fileID: 114134873722668098}
   m_FrontLeft: {fileID: 114658946717326374}
   m_RearRight: {fileID: 114083747195237736}

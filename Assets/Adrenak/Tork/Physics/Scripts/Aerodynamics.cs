@@ -27,7 +27,8 @@ namespace Adrenak.Tork {
 		}
 
 		void DoApplyDownForce() {
-			m_Rigidbody.AddForce(-Vector3.up * downForce);
+			if(downForce != 0)
+				m_Rigidbody.AddForce(-Vector3.up * downForce);
 		}
 
 		void Stabilize() {
@@ -40,11 +41,12 @@ namespace Adrenak.Tork {
 			Vector3 axis = Vector3.Cross(locUp, wsUp);
 			float force = stabilizationTorque;
 
-			GetComponent<Rigidbody>().AddTorque(axis * force);
+			m_Rigidbody.AddTorque(axis * force);
 		}
 
 		void SteerMidAir() {
-			GetComponent<Rigidbody>().AddTorque(new Vector3(0, midAirSteerInput * midAirSteerTorque, 0));
+			if(!Mathf.Approximately(midAirSteerInput, 0))
+				m_Rigidbody.AddTorque(new Vector3(0, midAirSteerInput * midAirSteerTorque, 0));
 		}
 	}
 }
