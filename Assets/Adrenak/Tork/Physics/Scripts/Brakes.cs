@@ -25,7 +25,7 @@ namespace Adrenak.Tork {
 
 			// If we have Ackerman steering, we apply torque based on the steering radius of each wheel
 			if (m_Ackermann != null) {
-				var radii = m_Ackermann.GetRadii();
+				var radii = Ackermann.GetRadii(m_Ackermann.Angle, m_Ackermann.AxleSeparation, m_Ackermann.AxleWidth);
 				var total = radii[0, 0] + radii[1, 0] + radii[0, 1] + radii[1, 1];
 				fl = radii[0, 0] / total;
 				fr = radii[1, 0] / total;

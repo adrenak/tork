@@ -1,10 +1,16 @@
 ﻿using Adrenak.Tork;
 using UnityEngine;
 
-public class PhysicsDemo : MonoBehaviour {
-	public Vehicle vehicle;
+namespace Adrenak.Tork.Demo {
+	public class PhysicsDemo : MonoBehaviour {
+		public Vehicle vehicle;
+		public SmoothFollow smoothFollow;
 
-	void Start () {
-		vehicle.SetPlayer(new KeyboardPlayer());
+		void Start () {
+			var player = vehicle.gameObject.AddComponent<KeyboardPlayer>();
+			vehicle.SetPlayer(player);
+
+			smoothFollow.target = vehicle.transform;
+		}
 	}
 }

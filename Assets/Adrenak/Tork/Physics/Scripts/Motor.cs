@@ -10,6 +10,8 @@ namespace Adrenak.Tork {
 		[Tooltip("Multiplier to the maxTorque")]
 		public float value;
 
+		public float m_MaxReverseInput = -.5f;
+
 		public Wheel m_FrontRight;
 		public Wheel m_FrontLeft;
 		public Wheel m_RearRight;
@@ -26,10 +28,11 @@ namespace Adrenak.Tork {
 		}
 
 		void ApplyMotorTorque() {
+			value = Mathf.Clamp(value, m_MaxReverseInput, 1);
 			float fr, fl, rr, rl;
 
 			// If we have Ackerman steering, we apply torque based on the steering radius of each wheel
-			var radii = m_Ackermann.GetRadii();
+			var radii = Ackermann.GetRadii(m_Ackermann.Angle, m_Ackermann.AxleSeparation, m_Ackermann.AxleWidth);
 			var total = radii[0, 0] + radii[1, 0] + radii[0, 1] + radii[1, 1];
 			fl = radii[0, 0] / total;
 			fr = radii[1, 0] / total;

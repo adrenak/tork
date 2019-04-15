@@ -14,7 +14,7 @@ It is being developed for [Project Torque](https://forum.unity.com/threads/proje
     5. Mid-air stabilization
 
 -   `AI`  
-    Coming soon
+    Currently has a simple `AIPlayer` script that approaches a destination
 -   `Effects`  
     Coming soon
 -   `Audio`  

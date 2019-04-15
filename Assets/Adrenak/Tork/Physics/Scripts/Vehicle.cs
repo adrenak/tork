@@ -10,7 +10,6 @@ namespace Adrenak.Tork {
 	[RequireComponent(typeof(Brakes))]
 	public class Vehicle : MonoBehaviour {
 		[SerializeField] Rigidbody m_Rigidbody;
-		[SerializeField] float m_MaxReverseInput = -.5f;
 
 		[Tooltip("The maximum motor torque available based on the speed (KMPH)")]
 		[SerializeField] AnimationCurve m_MotorTorqueVsSpeed = AnimationCurve.Linear(0, 10000, 250, 0);
@@ -39,6 +38,8 @@ namespace Adrenak.Tork {
 		}
 
 		void Update() {
+			if (m_Player == null) return;
+
 			var speed = Vector3.Dot(m_Rigidbody.velocity, transform.forward) * 3.6F;
 
 			m_Steering.range = m_MaxSteeringAngleVsSpeed.Evaluate(speed);
@@ -47,12 +48,10 @@ namespace Adrenak.Tork {
 
 			var input = m_Player.GetInput();
 
-			if(input != null) {
-				m_Steering.value = input.steering;
-				m_Motor.value = Mathf.Clamp(input.acceleration, m_MaxReverseInput, 1);
-				m_Aerodynamics.midAirSteerInput = input.steering;
-				m_Brake.value = input.brake;
-			}
+			m_Steering.value = input.steering;
+			m_Motor.value = input.acceleration;
+			m_Aerodynamics.midAirSteerInput = input.steering;
+			m_Brake.value = input.brake;
 		}
 	}
 }

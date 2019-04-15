@@ -6,7 +6,7 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: Obstacles
+  m_Name: Obstacle
   m_Shader: {fileID: 4800000, guid: 03867b49a37cd0741870f0acd214265f, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
