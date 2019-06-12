@@ -23,11 +23,9 @@ namespace Adrenak.Tork {
 				float travelR = Mathf.Clamp01(axle.right.CompressionRatio);
 				float antiRollForce = (travelL - travelR) * axle.force;
 
-				WheelHit hit;
 				if (axle.left.isGrounded)
 					rigidbody.AddForceAtPosition(wsDown * -antiRollForce, axle.left.Hit.point);
 			
-
 				if (axle.right.isGrounded)
 					rigidbody.AddForceAtPosition(wsDown * antiRollForce, axle.right.Hit.point);
 			}
