@@ -9,7 +9,7 @@ namespace Adrenak.Tork {
 	[RequireComponent(typeof(Steering))]
 	[RequireComponent(typeof(Brakes))]
 	public class Vehicle : MonoBehaviour {
-		[SerializeField] Rigidbody m_Rigidbody;
+		public Vector3 Velocity { get { return m_Rigidbody.velocity; } }
 
 		[Tooltip("The maximum motor torque available based on the speed (KMPH)")]
 		[SerializeField] AnimationCurve m_MotorTorqueVsSpeed = AnimationCurve.Linear(0, 10000, 250, 0);
@@ -20,6 +20,7 @@ namespace Adrenak.Tork {
 		[Tooltip("The down force based on the speed (KMPH)")]
 		[SerializeField] AnimationCurve m_DownForceVsSpeed = AnimationCurve.Linear(0, 0, 250, 2500);
 
+		Rigidbody m_Rigidbody;
 		Steering m_Steering;
 		Motor m_Motor;
 		Brakes m_Brake;
@@ -27,6 +28,7 @@ namespace Adrenak.Tork {
 		Player m_Player;
 
 		void Start() {
+			m_Rigidbody = GetComponent<Rigidbody>();
 			m_Steering = GetComponent<Steering>();
 			m_Motor = GetComponent<Motor>();
 			m_Aerodynamics = GetComponent<Aerodynamics>();
@@ -40,11 +42,11 @@ namespace Adrenak.Tork {
 		void Update() {
 			if (m_Player == null) return;
 
-			var speed = Vector3.Dot(m_Rigidbody.velocity, transform.forward) * 3.6F;
+			var speed = m_Rigidbody.velocity.magnitude * 3.6F;
 
-			m_Steering.range = m_MaxSteeringAngleVsSpeed.Evaluate(speed);
-			m_Motor.maxTorque = m_MotorTorqueVsSpeed.Evaluate(speed);
-			m_Aerodynamics.downForce = m_DownForceVsSpeed.Evaluate(speed);
+			m_Steering.range = GetMaxSteerAtSpeed(speed);
+			m_Motor.maxTorque = GetMotorTorqueAtSpeed(speed);
+			m_Aerodynamics.downForce = GetDownForceAtSpeed(speed);
 
 			var input = m_Player.GetInput();
 
@@ -52,6 +54,18 @@ namespace Adrenak.Tork {
 			m_Motor.value = input.acceleration;
 			m_Aerodynamics.midAirSteerInput = input.steering;
 			m_Brake.value = input.brake;
+		}
+
+		public float GetMotorTorqueAtSpeed(float speed) {
+			return m_MotorTorqueVsSpeed.Evaluate(speed);
+		}
+
+		public float GetMaxSteerAtSpeed(float speed) {
+			return m_MaxSteeringAngleVsSpeed.Evaluate(speed);
+		}
+
+		public float GetDownForceAtSpeed(float speed) {
+			return m_DownForceVsSpeed.Evaluate(speed);
 		}
 	}
 }

@@ -8,10 +8,10 @@ namespace Adrenak.Tork.Demo {
 		public Transform destination;
 
 		void Start() {
-			var player = vehicle.gameObject.AddComponent<AIPlayer>();
-			vehicle.SetPlayer(player);
+			var ai = vehicle.gameObject.AddComponent<AIPlayer>();
+			vehicle.SetPlayer(ai);
 
-			player.destination = destination;
+			ai.destination = destination;
 
 			follow.target = vehicle.transform;
 		}
