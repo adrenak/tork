@@ -52,8 +52,8 @@ namespace Adrenak.Tork {
 
 			m_Steering.value = input.steering;
 			m_Motor.value = input.acceleration;
-			m_Aerodynamics.midAirSteerInput = input.steering;
 			m_Brake.value = input.brake;
+			m_Aerodynamics.midAirSteerInput = input.steering;
 		}
 
 		public float GetMotorTorqueAtSpeed(float speed) {

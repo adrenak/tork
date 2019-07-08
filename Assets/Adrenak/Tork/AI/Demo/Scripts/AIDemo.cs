@@ -12,6 +12,7 @@ namespace Adrenak.Tork.Demo {
 			vehicle.SetPlayer(ai);
 
 			ai.destination = destination;
+			ai.steerDamping = .5f;
 
 			follow.target = vehicle.transform;
 		}

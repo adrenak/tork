@@ -3,15 +3,18 @@
 namespace Adrenak.Tork {
 	[RequireComponent(typeof(Steering))]
 	public class AIPlayer : Player {
-		enum Direction {
+		public enum Direction {
 			Forward,
 			Reverse
 		}
 
 		public Transform destination;
-		Direction m_Direction = Direction.Forward;
+		public Direction m_Direction = Direction.Forward;
+		public float steerDamping = .5f;
+
 		Vehicle m_Vehicle;
 		Steering m_Steering;
+		float lastSteer;
 
 		bool m_IsInTurningCircle;
 
@@ -20,12 +23,15 @@ namespace Adrenak.Tork {
 			m_Steering = GetComponent<Steering>();
 		}
 
+		public bool isBehind;
+		public bool isInCircle;
+
 		public override VehicleInput GetInput() {
 			var towards = destination.position - transform.position;
 			var locTowards = transform.InverseTransformDirection(towards);
 			var angle = Vector3.Angle(transform.forward, towards) * Mathf.Sign(locTowards.x);
 			bool isTargetOnRight = Mathf.Sign(locTowards.x) > 0;
-			bool isBehind = Vector3.Dot(towards, transform.forward) < 0;
+			isBehind = Vector3.Dot(towards, transform.forward) < 0;
 
 			// Get radii at the maximum steering angle
 			// This gives is the smallest turning radius the car can have
@@ -46,7 +52,7 @@ namespace Adrenak.Tork {
 			if (isPivotOnRight != isTargetOnRight)
 				localPivot.x *= -1;
 			pivot = transform.TransformPoint(localPivot);
-			var isInCircle = (destination.position - pivot).magnitude < avgRadius;
+			isInCircle = (destination.position - pivot).magnitude < avgRadius;
 
 			switch (m_Direction) {
 				case Direction.Forward:
@@ -54,6 +60,7 @@ namespace Adrenak.Tork {
 					p_Input.acceleration = 1;
 					p_Input.brake = 0;
 					p_Input.steering = Mathf.Clamp(angle / m_Steering.range, -1, 1);
+					lastSteer = p_Input.steering;
 					if (isBehind && isInCircle)
 						m_Direction = Direction.Reverse;
 					break;
@@ -62,6 +69,9 @@ namespace Adrenak.Tork {
 					p_Input.acceleration = -1;
 					p_Input.brake = 0;
 					p_Input.steering = Mathf.Clamp(angle / m_Steering.range, -1, 1) * (isTargetOnRight ? -1 : 1);
+					lastSteer = p_Input.steering;
+
+
 					if (!isBehind && !isInCircle)
 						m_Direction = Direction.Forward;
 					break;
