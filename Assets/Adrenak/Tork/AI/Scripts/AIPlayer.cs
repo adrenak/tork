@@ -65,8 +65,8 @@ namespace Adrenak.Tork {
 					lastSteer = p_Input.steering;
 					newSteer = Mathf.Clamp(angle / m_Steering.range, -1, 1);
 					damping = (newSteer - lastSteer) * steerDamping;
-					p_Input.steering = newSteer - damping;
-					
+					p_Input.steering = newSteer + damping;
+
 					if (isBehind && isInCircle)
 						m_Direction = Direction.Reverse;
 					break;
@@ -78,7 +78,7 @@ namespace Adrenak.Tork {
 					lastSteer = p_Input.steering;
 					newSteer = Mathf.Clamp(angle / m_Steering.range, -1, 1);
 					damping = (newSteer - lastSteer) * steerDamping;
-					p_Input.steering = newSteer - damping;
+					p_Input.steering = newSteer + damping;
 
 					if (!isBehind && !isInCircle)
 						m_Direction = Direction.Forward;

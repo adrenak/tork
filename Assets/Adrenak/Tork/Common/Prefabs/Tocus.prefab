@@ -2717,6 +2717,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
+  m_Player: {fileID: 0}
 --- !u!114 &114500219053648900
 MonoBehaviour:
   m_ObjectHideFlags: 1
