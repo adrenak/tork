@@ -20,12 +20,13 @@ namespace Adrenak.Tork {
 		[Tooltip("The down force based on the speed (KMPH)")]
 		[SerializeField] AnimationCurve m_DownForceVsSpeed = AnimationCurve.Linear(0, 0, 250, 2500);
 
+		[SerializeField] Player m_Player;
+
 		Rigidbody m_Rigidbody;
 		Steering m_Steering;
 		Motor m_Motor;
 		Brakes m_Brake;
 		Aerodynamics m_Aerodynamics;
-		Player m_Player;
 
 		void Start() {
 			m_Rigidbody = GetComponent<Rigidbody>();
