@@ -27,6 +27,8 @@ namespace Adrenak.Tork {
 		public bool isInCircle;
 
 		public override VehicleInput GetInput() {
+			float lastSteer = 0, newSteer = 0, damping = 0;
+
 			var towards = destination.position - transform.position;
 			var locTowards = transform.InverseTransformDirection(towards);
 			var angle = Vector3.Angle(transform.forward, towards) * Mathf.Sign(locTowards.x);
@@ -59,8 +61,12 @@ namespace Adrenak.Tork {
 					Debug.DrawLine(transform.position, pivot, Color.green);
 					p_Input.acceleration = 1;
 					p_Input.brake = 0;
-					p_Input.steering = Mathf.Clamp(angle / m_Steering.range, -1, 1);
+
 					lastSteer = p_Input.steering;
+					newSteer = Mathf.Clamp(angle / m_Steering.range, -1, 1);
+					damping = (newSteer - lastSteer) * steerDamping;
+					p_Input.steering = newSteer - damping;
+					
 					if (isBehind && isInCircle)
 						m_Direction = Direction.Reverse;
 					break;
@@ -68,9 +74,11 @@ namespace Adrenak.Tork {
 					Debug.DrawLine(transform.position, pivot, Color.red);
 					p_Input.acceleration = -1;
 					p_Input.brake = 0;
-					p_Input.steering = Mathf.Clamp(angle / m_Steering.range, -1, 1) * (isTargetOnRight ? -1 : 1);
-					lastSteer = p_Input.steering;
 
+					lastSteer = p_Input.steering;
+					newSteer = Mathf.Clamp(angle / m_Steering.range, -1, 1);
+					damping = (newSteer - lastSteer) * steerDamping;
+					p_Input.steering = newSteer - damping;
 
 					if (!isBehind && !isInCircle)
 						m_Direction = Direction.Forward;
