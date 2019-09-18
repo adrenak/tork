@@ -117,7 +117,12 @@ namespace Adrenak.Tork {
 		/// The torque the brake is applying on the wheel
 		/// </summary>
 		public float brakeTorque { get; set; }
-
+		
+		/// <summary>
+		///Revolutions per minute of the wheel
+		/// </summary>
+		public float RPM { get; private set; }
+		
 		/// <summary>
 		/// Whether the wheel is touching the ground
 		/// </summary>
@@ -167,8 +172,16 @@ namespace Adrenak.Tork {
 			transform.localEulerAngles = new Vector3(0, steerAngle, 0);
 			CalculateSuspension();
 			CalculateFriction();
-		}
+		        CalculateRPM();
+        	}
 
+        	void CalculateRPM()
+        	{
+            		float metersPerMinute = rigidbody.velocity.magnitude * 60;
+            		float wheelCircumference = 2 * Mathf.PI * radius;
+            		RPM = metersPerMinute / wheelCircumference;
+        	}
+				
 		void CalculateSuspension() {
 			float rayLen = GetRayLen();
 			m_Ray.direction = -transform.up.normalized;
