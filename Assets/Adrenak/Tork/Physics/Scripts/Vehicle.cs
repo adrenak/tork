@@ -12,13 +12,16 @@ namespace Adrenak.Tork {
 		public Vector3 Velocity { get { return m_Rigidbody.velocity; } }
 
 		[Tooltip("The maximum motor torque available based on the speed (KMPH)")]
-		[SerializeField] AnimationCurve m_MotorTorqueVsSpeed = AnimationCurve.Linear(0, 10000, 250, 0);
+		//[SerializeField] AnimationCurve m_MotorTorqueVsSpeed = AnimationCurve.Linear(0, 10000, 250, 0);
+		public AnimationCurve m_MotorTorqueVsSpeed = AnimationCurve.Linear(0, 10000, 250, 0);//changed to Public for Dots Conversion
 
 		[Tooltip("The steering angle based on the speed (KMPH)")]
-		[SerializeField] AnimationCurve m_MaxSteeringAngleVsSpeed = AnimationCurve.Linear(0, 35, 250, 5);
+		//[SerializeField] AnimationCurve m_MaxSteeringAngleVsSpeed = AnimationCurve.Linear(0, 35, 250, 5);
+		public AnimationCurve m_MaxSteeringAngleVsSpeed = AnimationCurve.Linear(0, 35, 250, 5);//changed to Public for Dots Conversion
 
 		[Tooltip("The down force based on the speed (KMPH)")]
-		[SerializeField] AnimationCurve m_DownForceVsSpeed = AnimationCurve.Linear(0, 0, 250, 2500);
+		//[SerializeField] AnimationCurve m_DownForceVsSpeed = AnimationCurve.Linear(0, 0, 250, 2500);
+		public AnimationCurve m_DownForceVsSpeed = AnimationCurve.Linear(0, 0, 250, 2500);//changed to Public for Dots Conversion
 
 		[SerializeField] Player m_Player;
 
