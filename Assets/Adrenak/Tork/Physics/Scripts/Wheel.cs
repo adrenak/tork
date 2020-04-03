@@ -154,7 +154,8 @@ namespace Adrenak.Tork {
 
 		Ray m_Ray;
 		new Rigidbody rigidbody;
-		const float k_RayStartHeight = 1;
+		//const float k_RayStartHeight = 1;
+		public float k_RayStartHeight = 1;//changed to Public for Dots Conversion
 
 		void Start() {
 			m_Ray = new Ray();

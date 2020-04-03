@@ -4,7 +4,9 @@ namespace Adrenak.Tork {
 	[RequireComponent(typeof(Ackermann))]
 	public class Brakes : MonoBehaviour {
 		[Tooltip("The maximum braking torque that can be applied")]
-		[SerializeField] float maxTorque = 5000;
+		//[SerializeField] float maxTorque = 5000;
+		public float maxTorque = 5000;//changed to Public for Dots Conversion
+
 
 		[Tooltip("Multiplier to the maxTorque")]
 		public float value;
