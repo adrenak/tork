@@ -8,23 +8,24 @@ namespace Pragnesh.Dots
 {
 	[DisallowMultipleComponent]
 	[RequiresEntityConversion]
+	[RequireComponent(typeof(VehicleConstants))]
 	public class ConversionHelper : MonoBehaviour, IConvertGameObjectToEntity
 	{
-		public Wheel[] wheels;
-		public WheelRenderer[] wheelRenderers;
-		public bool usePIDController;
-		public PIDController pidController;
+		 Wheel[] wheels;
+		 WheelRenderer[] wheelRenderers;
 
 		Ackermann ackermann;
-		 Vehicle vehicle;
-		 Brakes brakes;
-		 AntiRoll antiRoll;
-		 Aerodynamics aerodynamics;
-		 Motor motor;
-		 Steering steering;
+		Vehicle vehicle;
+		Brakes brakes;
+		AntiRoll antiRoll;
+		Aerodynamics aerodynamics;
+		Motor motor;
+		Steering steering;
+		VehicleConstants vConstants;
 
 		void GetComponents()
 		{
+			GetWheels();
 			TryGetComponent(out ackermann);
 			TryGetComponent(out vehicle);
 			TryGetComponent(out brakes);
@@ -32,10 +33,13 @@ namespace Pragnesh.Dots
 			TryGetComponent(out aerodynamics);
 			TryGetComponent(out motor);
 			TryGetComponent(out steering);
-			if (pidController == null)
-			{
-				TryGetComponent(out pidController);
-			}
+			TryGetComponent(out vConstants);
+
+		}
+		void GetWheels()
+		{
+			wheels =transform.GetComponentsInChildren<Wheel>();
+			wheelRenderers =transform.GetComponentsInChildren<WheelRenderer>();
 		}
 
 		public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
@@ -74,7 +78,7 @@ namespace Pragnesh.Dots
 					//m_Ray = wheels[i].m_Ray,
 					k_RayStartHeight = wheels[i].k_RayStartHeight,
 					root = entity,
-					usePIDController=usePIDController,
+					massMul= vConstants.massMul,
 				});
 
 			}
@@ -161,6 +165,7 @@ namespace Pragnesh.Dots
 					maxTorque = motor.maxTorque,
 					value = motor.value,
 					m_MaxReverseInput = motor.m_MaxReverseInput,
+					torqueMul= vConstants.torqueMul,
 				});
 
 				Entity FL = conversionSystem.GetPrimaryEntity(motor.m_FrontLeft.transform);
@@ -201,18 +206,7 @@ namespace Pragnesh.Dots
 
 				
 			}
-			if (pidController != null)
-			{
-				//PIDCOntroller for Smooth Suspension
-				dstManager.AddComponentData(entity, new PIDControllerData
-				{
-					pCoeff = pidController.pCoeff,
-					iCoeff = pidController.iCoeff,
-					dCoeff = pidController.dCoeff,
-					minimum = pidController.minimum,
-					maximum = pidController.maximum,
-				});
-			}
+			
 			#endregion
 		}
 	}

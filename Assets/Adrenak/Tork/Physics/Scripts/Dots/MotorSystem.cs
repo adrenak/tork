@@ -13,6 +13,7 @@ namespace Pragnesh.Dots
 		public float maxTorque;//= 20000;
 		public float value;
 		public float m_MaxReverseInput;//= -.5f;
+		public float torqueMul;
 	}
 	public struct WheelsRef : IComponentData
 	{

@@ -9,7 +9,7 @@ using AnimationCurve = UnityEngine.AnimationCurve;
 using Pragnesh.Dots;
 namespace Pragnesh.Dots
 {
-	
+
 	public struct VehicleData : IComponentData
 	{
 		//public Vector3 Velocity;
@@ -48,6 +48,7 @@ namespace Pragnesh.Dots
 
 	}
 
+
 	public class VehicleSystem : ComponentSystem
 	{
 		//PhysicsWorld physicsWorld;
@@ -59,14 +60,14 @@ namespace Pragnesh.Dots
 				ref BrakesData m_Brake, ref AerodynamicsData m_Aerodynamics) =>
 			{
 
-				VehicleInputData inputData = EntityManager.GetComponentData<VehicleInputData>(entity);
+				var inputData = EntityManager.GetComponentData<VehicleInputData>(entity);
 
 				//var speed = m_Rigidbody.velocity.magnitude * 3.6F;
 				var speed = ((Vector3)physicsVelocity.Linear).magnitude * 3.6F;
 
 				m_Steering.range = vehicleData.GetMaxSteerAtSpeed(speed);
-				m_Motor.maxTorque = vehicleData.GetMotorTorqueAtSpeed(speed);
-				m_Aerodynamics.downForce = vehicleData.GetDownForceAtSpeed(speed);
+				m_Motor.maxTorque = vehicleData.GetMotorTorqueAtSpeed(speed) * m_Motor.torqueMul;
+				m_Aerodynamics.downForce = vehicleData.GetDownForceAtSpeed(speed) * m_Motor.torqueMul;
 
 				//var input = m_Player.GetInput();
 

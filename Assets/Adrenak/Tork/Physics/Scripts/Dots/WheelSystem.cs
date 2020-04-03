@@ -169,6 +169,13 @@ namespace Pragnesh.Dots
 	public float k_RayStartHeight;//= 1;
 	public Entity root;
 	public bool usePIDController;
+	public float hitDist;
+
+	/// <summary>
+	/// to adjust frictionForceaction on wheel on Dots Physics
+	/// This needed because Dots Physics And Unity Physics are different
+	/// </summary>
+	public float massMul;
 	public float GetRayLen()
 	{
 		return suspensionDistance + radius + k_RayStartHeight;
@@ -183,28 +190,18 @@ namespace Pragnesh.Dots
 		{
 			physicsWorld = World.GetOrCreateSystem<BuildPhysicsWorld>().PhysicsWorld;
 			World.GetOrCreateSystem<BuildPhysicsWorld>().FinalJobHandle.Complete();
-			Entities.ForEach((Entity entity, ref WheelData wheel, ref LocalToWorld tr
-				) =>
+			Entities.ForEach((Entity entity, ref WheelData wheel, ref LocalToWorld tr) =>
 			{
 				int rbId = physicsWorld.GetRigidBodyIndex(wheel.root);
-				PIDControllerData pIDController = new PIDControllerData();
-				if (EntityManager.HasComponent<PIDControllerData>(wheel.root))
-				{
-					 pIDController = EntityManager.GetComponentData<PIDControllerData>(wheel.root);
-				}
-				else
-				{
-					wheel.usePIDController = false;
-				}
-
-				FixedUpdate(ref wheel, tr, rbId, ref pIDController);
+				
+				FixedUpdate(ref wheel, tr, rbId);
 			});
 		}
 
-		void FixedUpdate(ref WheelData wheel, LocalToWorld tr, int rbId, ref PIDControllerData pIDController)
+		void FixedUpdate(ref WheelData wheel, LocalToWorld tr, int rbId)
 		{
 			//transform.localEulerAngles = new Vector3(0, steerAngle, 0);
-			CalculateSuspension(ref wheel, tr, rbId, ref pIDController);
+			CalculateSuspension(ref wheel, tr, rbId);
 			CalculateFriction(rbId, ref wheel, tr);
 			CalculateRPM(ref wheel, rbId);
 		}
@@ -218,7 +215,7 @@ namespace Pragnesh.Dots
 			wheel.RPM = metersPerMinute / wheelCircumference;
 		}
 
-		void CalculateSuspension(ref WheelData wheel, LocalToWorld transform, int rbId, ref PIDControllerData pIDController)
+		void CalculateSuspension(ref WheelData wheel, LocalToWorld transform, int rbId)
 		{
 			float rayLen = wheel.GetRayLen();
 			wheel.m_Ray.direction = ((Vector3)(-transform.Up)).normalized;
@@ -240,8 +237,7 @@ namespace Pragnesh.Dots
 
 			var force = 0.0f;
 			wheel.isGrounded = true;
-			float distance = Vector3.Distance(wheel.Hit.Position, transform.Position);
-			wheel.CompressionDistance = rayLen - distance;
+			wheel.CompressionDistance = rayLen - wheel.hitDist;
 			wheel.CompressionDistance = Mathf.Clamp(wheel.CompressionDistance, 0, wheel.suspensionDistance);
 
 			wheel.CompressionRatio = Mathf.Clamp01(wheel.CompressionDistance / wheel.suspensionDistance);
@@ -255,13 +251,7 @@ namespace Pragnesh.Dots
 			float rate = (wheel.CompressionDistance - wheel.m_PrevCompressionDist) / Time.fixedDeltaTime;
 			wheel.m_PrevCompressionDist = wheel.CompressionDistance;
 
-			//stuff  For PIDCOntroller
-			if (wheel.usePIDController)
-			{
-				wheel.CompressionRatio = pIDController.Seek(wheel.CompressionDistance, distance);
-				rate = pIDController.Seek(wheel.m_PrevCompressionDist, wheel.CompressionDistance);
-			}
-
+			
 			float damperForce = rate * wheel.damping;
 			force += damperForce;
 
@@ -303,6 +293,7 @@ namespace Pragnesh.Dots
 					if (wheelhits[i].RigidBodyIndex != rbId)
 					{
 						wheel.Hit = wheelhits[i];
+						wheel.hitDist = Vector3.Distance(wheel.m_Ray.origin, wheel.Hit.Position);
 						validHit = true;
 						break;
 					}
@@ -316,7 +307,7 @@ namespace Pragnesh.Dots
 		void CalculateFriction(int rbId, ref WheelData wheel, LocalToWorld transform)
 		{
 			//wheel.Velocity = rigidbody.GetPointVelocity(Hit.point);
-			wheel.Velocity = physicsWorld.GetLinearVelocity(1, wheel.Hit.Position);
+			wheel.Velocity = physicsWorld.GetLinearVelocity(rbId, (Vector3)wheel.Hit.Position);
 			if (!wheel.isGrounded) return;
 
 			// Contact basis (can be different from wheel basis)
@@ -333,7 +324,7 @@ namespace Pragnesh.Dots
 			Vector3 forwardVel = Vector3.Dot(wheel.Velocity, forward) * forward * multiplier;
 			Vector3 velocity2D = sideVel + forwardVel;
 
-			float mass = physicsWorld.GetMass(rbId);
+			float mass = physicsWorld.GetMass(rbId) * wheel.massMul; ;
 			Vector3 momentum = velocity2D * mass;
 
 			var latForce = Vector3.Dot(-momentum, side) * side * wheel.sidewaysGrip;
@@ -351,9 +342,8 @@ namespace Pragnesh.Dots
 			frictionForce -= longForce;
 			//rigidbody.AddForceAtPosition(frictionForce, wheel.Hit.point);
 			physicsWorld.ApplyImpulse(rbId, frictionForce, wheel.Hit.Position);
-			Debug.DrawLine(wheel.Hit.Position, ((Vector3)wheel.Hit.Position + frictionForce), Color.blue);
 			//rigidbody.AddForceAtPosition(forward * motorTorque / radius * forwardGrip, Hit.point);
-			physicsWorld.ApplyImpulse(rbId, forward * wheel.motorTorque / wheel.radius * wheel.forwardGrip, wheel.Hit.Position);
+			physicsWorld.ApplyImpulse(rbId, (forward.normalized) * wheel.motorTorque / wheel.radius * wheel.forwardGrip,(Vector3)wheel.Hit.Position);
 
 		}
 
