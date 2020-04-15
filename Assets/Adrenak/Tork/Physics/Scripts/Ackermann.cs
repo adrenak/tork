@@ -95,6 +95,8 @@ namespace Adrenak.Tork {
 			return radii;
 		}
 
+
+	#if UNITY_EDITOR
 		void OnDrawGizmos() {
 			if (drawLevel == DrawLevel.Always)
 				Draw();
@@ -105,7 +107,6 @@ namespace Adrenak.Tork {
 				Draw();
 		}
 
-	#if UNITY_EDITOR
 		void Draw() {
 			UnityEditor.Handles.color = Color.cyan;
 
