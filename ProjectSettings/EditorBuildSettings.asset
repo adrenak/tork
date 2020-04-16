@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Adrenak/Tork/AI/Demo/AIDemo.unity
+    path: Assets/Adrenak.Tork/Samples/Demo-AIDriver/AIDemo.unity
     guid: 34a95e22abc6dd345b998f1a7cddd0cb
   m_configObjects: {}
