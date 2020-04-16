@@ -1,6 +1,6 @@
 {
 	"name": "com.adrenak.tork",
-	"version": "0.0.0",
+	"version": "1.0.0",
 	"displayName": "Tork",
 	"description": "Arcade vehicle physics for Unity.",
 	"unity": "2018.4",
@@ -9,8 +9,6 @@
 		"email": "adrenak_@outlook.com",
 		"url": "http://www.vatsalambastha.com"
 	},
-	"dependencies": {
-	},
-	"scopedRegistries": [
-	]
+	"dependencies": {},
+	"scopedRegistries": []
 }
