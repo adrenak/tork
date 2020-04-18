@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 
 namespace Adrenak.Tork {
-	[RequireComponent(typeof(Ackermann))]
 	public class Brakes : MonoBehaviour {
         public Ackermann ackermann;
 
