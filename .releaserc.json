@@ -5,14 +5,14 @@
     "@semantic-release/release-notes-generator",
     ["@semantic-release/changelog", { 
       "preset": "angular",
-      "changelogFile":"Assets/Adrenak.Tork/CHANGELOG.MD"
+      "changelogFile":"Assets/Adrenak.Tork/CHANGELOG.md"
     }],
     ["@semantic-release/npm", { 
       "npmPublish": false,
       "pkgRoot":"Assets/Adrenak.Tork"
     }],
     ["@semantic-release/git", {
-      "assets": ["Assets/Adrenak.Tork/package.json", "Assets/Adrenak.Tork/CHANGELOG.md"],
+      "assets": ["Assets/Adrenak.Tork/package.json", "Assets/Adrenak.Tork/CHANGELOG.md", "CHANGELOG.md"],
       "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
     }],
     "@semantic-release/github"
