@@ -21,11 +21,11 @@ namespace Adrenak.Tork {
         /// </summary>
         public float stiffness = 10000;
 
-        [Tooltip("Damping applied to the wheel. Lower values make the wheel bounce more.")]
+        [Tooltip("Damping applied to the wheel. Higher values make the wheel bounce more. Values outside [0, 0.77f] tend to be unnatural")]
         /// <summary>
-        /// Damping applied to the wheel. Lower values make the wheel bounce more.
+        /// Damping applied to the wheel. Higher values make the wheel bounce more. Values outside [0, 0.77f] tend to be unnatural
         /// </summary>
-        public float damping = 5000;
+        public float dampingFactor = .5f;
 
         [Tooltip("The rate (m/s) at which the spring relaxes to maximum length when the wheel is not on the ground.")]
         /// <summary>
@@ -46,19 +46,13 @@ namespace Adrenak.Tork {
         /// </summary>
         public float forwardGrip = 1;
 
-        [Tooltip("Multiplier for the wheels sideways friction. Values below 1 cause the wheel to skid. Values above 1 will cause the wheel to take sharper turns")]
+        [Tooltip("A constant friction % applied at all times. This allows the car to slow down when no torque is applied")]
         /// <summary>
-        /// Multiplier for the wheels sideways friction Values below 1 cause the wheel to skid Values above 1 will cause the wheel to take sharper turns
+        /// A constant friction % applied at all times. This allows the car to slow down when no torque is applied
         /// </summary>
         public float rollingFriction = .1f;
 
-        [Header("Collision")]
-        [Tooltip("Whether the normal force from the wheel collision should be faked. True causes the force to be applied only along the wheels upward direction causing causing it to not slow down from collisions")]
-        /// <summary>
-        /// Whether the normal force from the wheel collision should be faked. True causes the force to be applied only along the wheels upward direction causing causing it to not slow down from collisions
-        /// </summary>
-        public bool fakeNormals;
-
+        [Header("Raycasting")]
         /// <summary>
         /// The layers used for wheel raycast
         /// </summary>
@@ -176,7 +170,7 @@ namespace Adrenak.Tork {
             float rate = (m_PrevCompressionDist - CompressionDistance) / Time.fixedDeltaTime;
             m_PrevCompressionDist = CompressionDistance;
 
-            float damperForce = rate * damping;
+            float damperForce = rate * stiffness * (1 - dampingFactor);
             force -= damperForce;
 
             force *= Vector3.Dot(Hit.normal, transform.up);

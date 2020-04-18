@@ -6,10 +6,6 @@ namespace Adrenak.Tork {
 		public float offset;
 		public float angle;
 		
-		private void OnValidate() {
-			SyncPosition();
-		}
-
 		public void Update() {
 			SyncPosition();
 			SyncRotation();
