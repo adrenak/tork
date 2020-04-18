@@ -2,10 +2,9 @@
 using UnityEngine;
 
 namespace Adrenak.Tork {
-	[RequireComponent(typeof(Ackermann))]
 	public class Motor : MonoBehaviour {
 		[Tooltip("The maximum torque that the motor generates")]
-		public float maxTorque = 20000;
+		public float maxTorque = 10000;
 
 		[Tooltip("Multiplier to the maxTorque")]
 		public float value;

@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 
 namespace Adrenak.Tork {
-	[RequireComponent(typeof(Ackermann))]
 	public class Steering : MonoBehaviour {
 		public float range = 35;
 		public float value; // 0..1

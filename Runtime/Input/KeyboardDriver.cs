@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 namespace Adrenak.Tork{
-	public class KeyboardDriver : Driver {
+	public class KeyboardDriver : VehicleDriver {
 		public const string k_SteeringAxisName = "Horizontal";
 		public const string k_AccelerateAxisName = "Vertical";
 		public const string k_BrakeAxisName = "Jump";
