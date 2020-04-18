@@ -57,16 +57,16 @@ namespace Adrenak.Tork {
 			m_Aerodynamics.midAirSteerInput = input.steering;
 		}
 
-		public float GetMotorTorqueAtSpeed(float speed) {
+        public float GetDownForceAtSpeed(float speed) {
+            return m_DownForceVsSpeed.Evaluate(speed);
+        }
+
+        public float GetMotorTorqueAtSpeed(float speed) {
 			return m_MotorTorqueVsSpeed.Evaluate(speed);
 		}
 
 		public float GetMaxSteerAtSpeed(float speed) {
 			return m_MaxSteeringAngleVsSpeed.Evaluate(speed);
-		}
-
-		public float GetDownForceAtSpeed(float speed) {
-			return m_DownForceVsSpeed.Evaluate(speed);
 		}
 	}
 }

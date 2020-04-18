@@ -39,14 +39,14 @@ namespace Adrenak.Tork {
 			// This gives is the smallest turning radius the car can have
 			var radii = Ackermann.GetRadii(
 				m_Vehicle.GetMaxSteerAtSpeed(m_Vehicle.Velocity.magnitude),
-				m_Steering.Ackermann.AxleSeparation,
-				m_Steering.Ackermann.AxleWidth
+				m_Steering.ackermann.AxleSeparation,
+				m_Steering.ackermann.AxleWidth
 			);
 			var avgRadius = (radii[0, 0] + radii[0, 1] + radii[1, 0] + radii[1, 1]) / 4;
 			avgRadius = Mathf.Abs(avgRadius);
 
 			// Find out if the target is inside the turning circle
-			var pivot = m_Steering.Ackermann.GetPivot();
+			var pivot = m_Steering.ackermann.GetPivot();
 			var localPivot = transform.InverseTransformPoint(pivot);
 			var isPivotOnRight = Mathf.Sign(localPivot.x) > 0;
 			// If the target and pivot are on opposite sides of the car
