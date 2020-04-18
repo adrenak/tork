@@ -5,8 +5,6 @@ namespace Adrenak.Tork {
     /// An implementation of Ackermann steering mechanism
     /// </summary>
     public class Ackermann : MonoBehaviour {
-        public DrawLevel drawLevel;
-
         [SerializeField] Wheel m_FrontRight;
         public Wheel FrontRightWheel{ get { return m_FrontRight; } }
 
@@ -14,7 +12,7 @@ namespace Adrenak.Tork {
         public Wheel FrontLeftWheel { get { return m_FrontLeft; } }
 
         [SerializeField] Wheel m_RearRight;
-        public Wheel ReadRightWheel { get { return m_RearRight ; } }
+        public Wheel RearRightWheel { get { return m_RearRight ; } }
 
         [SerializeField] Wheel m_RearLeft;
         public Wheel RearLeftWheel { get { return m_RearLeft; } }

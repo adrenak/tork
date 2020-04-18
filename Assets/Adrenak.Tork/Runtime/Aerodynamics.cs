@@ -6,18 +6,24 @@ namespace Adrenak.Tork {
 		[SerializeField] Rigidbody m_Rigidbody;
 		[SerializeField] Wheel[] m_Wheels;
 
+        [Header("Down Force")]
 		public float downForce = 1000;
+        
+        [Header("Mid Air Stabilization")]
 		public float stabilizationTorque = 15000;
+
+        [Header("Mid Air Steer")]
 		public float midAirSteerTorque = 1500;
 		public float midAirSteerInput;
 
+        [Header("Options")]
 		public bool doApplyDownForce;
 		public bool doStabilize;
 		public bool doSteerMidAir;
 
 		void FixedUpdate() {
 			if (doApplyDownForce)
-				DoApplyDownForce();
+				ApplyDownForce();
 
 			if (doStabilize)
 				Stabilize();
@@ -26,14 +32,14 @@ namespace Adrenak.Tork {
 				SteerMidAir();
 		}
 
-		void DoApplyDownForce() {
+		void ApplyDownForce() {
 			if(downForce != 0)
 				m_Rigidbody.AddForce(-Vector3.up * downForce);
 		}
 
 		void Stabilize() {
-			var inAir = m_Wheels.Where(x => !x.IsGrounded);
-			if (inAir.Count() != 4) return;
+			var inAir = m_Wheels.Where(x => x.IsGrounded);
+			if (inAir.Count() == 4) return;
 
 			// Try to keep vehicle parallel to the ground while jumping
 			Vector3 locUp = transform.up;
