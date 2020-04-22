@@ -1,3 +1,10 @@
+# [2.1.0](https://github.com/adrenak/tork/compare/v2.0.0...v2.1.0) (2020-04-22)
+
+
+### Features
+
+* v2 refactor ([40fc249](https://github.com/adrenak/tork/commit/40fc249d34c04aabfba4396219b03a301bdcf028))
+
 # [2.0.0](https://github.com/adrenak/Tork/compare/v1.0.0...v2.0.0) (2020-04-18)
 
 
