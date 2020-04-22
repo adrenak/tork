@@ -38,7 +38,7 @@ jobs:
         fi
         git push -f -u origin upm
       env:
-        PKG_ROOT: "Assets/Adrenak.Tork"
+        PKG_ROOT: "Assets/Tork"
 
     - name: Create UPM git tag
       if: steps.semantic.outputs.new_release_published == 'true'
