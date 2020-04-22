@@ -1,0 +1,14 @@
+{
+	"name": "com.adrenak.tork",
+	"version": "2.0.0",
+	"displayName": "Tork",
+	"description": "Arcade vehicle physics for Unity.",
+	"unity": "2018.4",
+	"author": {
+		"name": "Vatsal Ambastha",
+		"email": "adrenak_@outlook.com",
+		"url": "http://www.vatsalambastha.com"
+	},
+	"dependencies": {},
+	"scopedRegistries": []
+}

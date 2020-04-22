@@ -1,0 +1,14 @@
+{
+    "name": "Adrenak.Tork.Samples",
+    "references": [
+        "Adrenak.Tork.Runtime"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": []
+}
