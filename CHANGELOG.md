@@ -1,3 +1,10 @@
+## [2.1.1](https://github.com/adrenak/tork/compare/v2.1.0...v2.1.1) (2020-04-24)
+
+
+### Bug Fixes
+
+* Update the inner README ([f04f1dc](https://github.com/adrenak/tork/commit/f04f1dc2bc0593fe8b024ce5094c299feb008f58))
+
 # [2.1.0](https://github.com/adrenak/tork/compare/v2.0.0...v2.1.0) (2020-04-22)
 
 
