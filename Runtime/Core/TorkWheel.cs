@@ -232,7 +232,7 @@ namespace Adrenak.Tork {
             // Apply brake resistance force
             var brakeResistanceForceMag = BrakeTorque / radius;
             brakeResistanceForceMag = Mathf.Clamp(brakeResistanceForceMag, 0, longForce.magnitude);
-            Vector3 brakeResistanceForce = longForce.normalized * brakeResistanceForceMag;
+            Vector3 brakeResistanceForce = longForce.normalized * brakeResistanceForceMag * engineShaftToWheelRatio;
             longForce -= brakeResistanceForce;
 
             gripResistanceForce -= longForce;
