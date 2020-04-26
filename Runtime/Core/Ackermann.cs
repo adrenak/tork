@@ -17,9 +17,7 @@ namespace Adrenak.Tork {
         [SerializeField] TorkWheel m_RearLeft;
         public TorkWheel RearLeftWheel { get { return m_RearLeft; } }
 
-        public float[,] Radii { get; private set; }
-
-        public float Angle { get; private set; }
+        public float Angle { get; set; }
 
         public float AxleSeparation {
             get { return (m_FrontLeft.transform.position - m_RearLeft.transform.position).magnitude; }
@@ -37,22 +35,13 @@ namespace Adrenak.Tork {
             get { return AxleSeparation / Mathf.Sin(Mathf.Abs(m_FrontLeft.SteerAngle)); }
         }
 
-        private void Start() {
-            Radii = new float[2, 2];
-        }
-
-        private void Update() {
-            Radii = GetRadii(Angle, AxleSeparation, AxleWidth);
-        }
-
-        public void SetAngle(float angle) {
-            Angle = angle;
-            var farAngle = GetSecondaryAngle(angle, AxleWidth, AxleSeparation);
+        void Update() {
+            var farAngle = AckermannUtils.GetSecondaryAngle(Angle, AxleSeparation, AxleWidth);
 
             // The rear wheels are always at 0 steer in Ackermann
             m_RearLeft.SteerAngle = m_RearRight.SteerAngle = 0;
 
-            if (Mathf.Approximately(Angle, 0))
+            if (Mathf.Approximately((float)Angle, 0))
                 m_FrontRight.SteerAngle = m_FrontLeft.SteerAngle = 0;
             else if (Angle > 0) {
                 m_FrontRight.SteerAngle = Angle;
@@ -66,55 +55,13 @@ namespace Adrenak.Tork {
 
         public Vector3 GetPivot() {
             if (Angle > 0)
-                return m_FrontRight.transform.position + Radii[0, 1] * m_FrontRight.transform.right;
+                return m_RearRight.transform.position + CurrentRadii[0] * m_RearRight.transform.right;
             else
-                return m_FrontLeft.transform.position - Radii[0, 0] * m_FrontLeft.transform.right;
+                return m_RearLeft.transform.position - CurrentRadii[0] * m_RearLeft.transform.right;
         }
 
-        public float[,] CurrentRadii {
-            get { return GetRadii(Angle, AxleSeparation, AxleWidth); }
-        }
-
-        public float CurrentTurningRadius {
-            get {
-                var radii = CurrentRadii;
-                return (radii[0, 0] + radii[0, 1]) / 2;
-            }
-        }
-
-        public static float GetSecondaryAngle(float angle, float width, float separation) {
-            float close = separation / Mathf.Tan(Mathf.Abs(angle) * Mathf.Deg2Rad);
-            float far = close + width;
-
-            return Mathf.Atan(separation / far) * Mathf.Rad2Deg;
-        }
-
-        public static float GetRadius(float angle, float separation, float width){
-            var radii = GetRadii(angle, separation, width);
-            return radii[0, 0] + radii[0, 1] + radii[1, 0] + radii[1, 1] / 4;
-        }
-
-        public static float[,] GetRadii(float angle, float separation, float width) {
-            var secAngle = GetSecondaryAngle(angle, width, separation);
-            float[,] radii = new float[2, 2];
-
-            if (Mathf.Abs(angle) < 1)
-                radii[0, 0] = radii[1, 0] = radii[0, 1] = radii[1, 1] = 1000;
-
-            if (angle < -1) {
-                radii[0, 0] = separation / Mathf.Sin(Mathf.Abs(angle * Mathf.Deg2Rad));
-                radii[0, 1] = separation / Mathf.Sin(Mathf.Abs(secAngle * Mathf.Deg2Rad));
-                radii[1, 0] = separation / Mathf.Tan(Mathf.Abs(angle * Mathf.Deg2Rad));
-                radii[1, 1] = separation / Mathf.Tan(Mathf.Abs(secAngle * Mathf.Deg2Rad));
-            }
-            else if (angle > 1) {
-                radii[0, 0] = separation / Mathf.Sin(Mathf.Abs(secAngle * Mathf.Deg2Rad));
-                radii[0, 1] = separation / Mathf.Sin(Mathf.Abs(angle * Mathf.Deg2Rad));
-                radii[1, 0] = separation / Mathf.Tan(Mathf.Abs(secAngle * Mathf.Deg2Rad));
-                radii[1, 1] = separation / Mathf.Tan(Mathf.Abs(angle * Mathf.Deg2Rad));
-            }
-
-            return radii;
+        public float[] CurrentRadii {
+            get { return AckermannUtils.GetRadii(Angle, AxleSeparation, AxleWidth); }
         }
     }
 }

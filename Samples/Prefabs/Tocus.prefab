@@ -1,5 +1,52 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &255152389
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 255152390}
+  - component: {fileID: 255152392}
+  m_Layer: 0
+  m_Name: Auto Drive
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &255152390
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 255152389}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2425653309673728414}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &255152392
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 255152389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04ba35be00207f1408fcd9d4f9881aaf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  vehicle: {fileID: 114480416164222720}
+  destination: {x: 0, y: 0, z: 0}
+  steeringRate: 0.5
+  brakingDistance: 10
 --- !u!1 &274411936
 GameObject:
   m_ObjectHideFlags: 0
@@ -640,6 +687,7 @@ MonoBehaviour:
   - {fileID: 1214198106691927564}
   - {fileID: 1530015582167757396}
   - {fileID: 4502441065919909737}
+  - {fileID: 255152392}
 --- !u!1 &1166002035971444
 GameObject:
   m_ObjectHideFlags: 0
@@ -2931,7 +2979,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ackermann: {fileID: 1214198106228332029}
-  maxTorque: 4750
+  maxTorque: 1000
   value: 0
 --- !u!1 &1214198106228332026
 GameObject:
@@ -3111,7 +3159,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1214198106691927562}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3ea26387ab63fdc4088fabfe3a742a8e, type: 3}
   m_Name: 
@@ -3612,6 +3660,7 @@ Transform:
   - {fileID: 1214198107628456251}
   - {fileID: 1214198106691927565}
   - {fileID: 2895941578727108575}
+  - {fileID: 255152390}
   m_Father: {fileID: 8897573135319807936}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

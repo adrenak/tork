@@ -20,7 +20,7 @@ namespace Adrenak.Tork {
             var destination = value * range;
             m_CurrAngle = Mathf.MoveTowards(m_CurrAngle, destination, Time.deltaTime * rate);
             m_CurrAngle = Mathf.Clamp(m_CurrAngle, -range, range);
-            ackermann.SetAngle(m_CurrAngle);
+            ackermann.Angle = m_CurrAngle;
         }
     }
 }

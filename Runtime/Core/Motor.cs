@@ -2,36 +2,48 @@
 using UnityEngine;
 
 namespace Adrenak.Tork {
-	public class Motor : MonoBehaviour {
-		[Tooltip("The maximum torque that the motor generates")]
-		public float maxTorque = 10000;
+    public class Motor : MonoBehaviour {
+        [Tooltip("The maximum torque that the motor generates")]
+        public float maxTorque = 10000;
 
-		[Tooltip("Multiplier to the maxTorque")]
-		public float value;
+        [Tooltip("Multiplier to the maxTorque")]
+        public float value;
 
-		public float m_MaxReverseInput = -.5f;
+        public float m_MaxReverseInput = -.5f;
 
         public Ackermann ackermann;
 
-		void FixedUpdate() {
-			ApplyMotorTorque();
-		}
+        void FixedUpdate() {
+            ApplyMotorTorque();
+        }
 
-		void ApplyMotorTorque() {
-			value = Mathf.Clamp(value, m_MaxReverseInput, 1);
+        void Update() {
+            value = Mathf.Clamp(value, m_MaxReverseInput, 1);
+        }
 
-			// If we have Ackerman steering, we apply torque based on the steering radius of each wheel
-			var radii = Ackermann.GetRadii(ackermann.Angle, ackermann.AxleSeparation, ackermann.AxleWidth);
-			var total = radii[0, 0] + radii[1, 0] + radii[0, 1] + radii[1, 1];
-			var fl = radii[0, 0] / total;
-            var fr = radii[1, 0] / total;
-            var rl = radii[0, 1] / total;
-            var rr = radii[1, 1] / total;
-			
-			ackermann.FrontLeftWheel.MotorTorque = value * maxTorque * fl;
-			ackermann.FrontRightWheel.MotorTorque = value * maxTorque * fr;
-			ackermann.RearLeftWheel.MotorTorque = value * maxTorque * rl;
-			ackermann.RearRightWheel.MotorTorque = value * maxTorque * rr;
-		}
-	}
+        void ApplyMotorTorque() {
+            float fs, fp, rs, rp;
+
+            // If we have Ackerman steering, we apply torque based on the steering radius of each wheel
+            var radii = AckermannUtils.GetRadii(ackermann.Angle, ackermann.AxleSeparation, ackermann.AxleWidth);
+            var total = radii[0] + radii[1] + radii[2] + radii[3];
+            fp = radii[0] / total;
+            fs = radii[1] / total;
+            rp = radii[2] / total;
+            rs = radii[3] / total;
+
+            if (ackermann.Angle > 0) {
+                ackermann.FrontRightWheel.MotorTorque = value * maxTorque * fp;
+                ackermann.FrontLeftWheel.MotorTorque = value * maxTorque * fs;
+                ackermann.RearRightWheel.MotorTorque = value * maxTorque * rp;
+                ackermann.RearLeftWheel.MotorTorque = value * maxTorque * rs;
+            }
+            else {
+                ackermann.FrontLeftWheel.MotorTorque = value * maxTorque * fp;
+                ackermann.FrontRightWheel.MotorTorque = value * maxTorque * fs;
+                ackermann.RearLeftWheel.MotorTorque = value * maxTorque * rp;
+                ackermann.RearRightWheel.MotorTorque = value * maxTorque * rs;
+            }
+        }
+    }
 }
