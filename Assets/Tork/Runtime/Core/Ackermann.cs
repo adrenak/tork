@@ -89,6 +89,11 @@ namespace Adrenak.Tork {
             return Mathf.Atan(separation / far) * Mathf.Rad2Deg;
         }
 
+        public static float GetRadius(float angle, float separation, float width){
+            var radii = GetRadii(angle, separation, width);
+            return radii[0, 0] + radii[0, 1] + radii[1, 0] + radii[1, 1] / 4;
+        }
+
         public static float[,] GetRadii(float angle, float separation, float width) {
             var secAngle = GetSecondaryAngle(angle, width, separation);
             float[,] radii = new float[2, 2];

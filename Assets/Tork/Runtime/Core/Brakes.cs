@@ -11,6 +11,8 @@ namespace Adrenak.Tork {
 		public float value;
 
 		void FixedUpdate() {
+            value = Mathf.Clamp01(value);
+
 			float fr, fl, rr, rl;
 
             // If we have Ackerman steering, we apply torque based on the steering radius of each wheel
