@@ -1,36 +1,40 @@
 ﻿using UnityEngine;
 
 namespace Adrenak.Tork {
-	public class Brakes : MonoBehaviour {
+    public class Brakes : MonoBehaviour {
         public Ackermann ackermann;
 
-		[Tooltip("The maximum braking torque that can be applied")]
-		[SerializeField] float maxTorque = 5000;
+        [Tooltip("The maximum braking torque that can be applied")]
+        [SerializeField] float maxTorque = 5000;
 
-		[Tooltip("Multiplier to the maxTorque [0..1]")]
-		public float value;
+        [Tooltip("Multiplier to the maxTorque [0..1]")]
+        public float value;
 
-		void FixedUpdate() {
+        void FixedUpdate() {
             value = Mathf.Clamp01(value);
 
-			float fr, fl, rr, rl;
+            float fs, fp, rs, rp;
 
             // If we have Ackerman steering, we apply torque based on the steering radius of each wheel
-            if (ackermann != null) {
-                var radii = Ackermann.GetRadii(ackermann.Angle, ackermann.AxleSeparation, ackermann.AxleWidth);
-                var total = radii[0, 0] + radii[1, 0] + radii[0, 1] + radii[1, 1];
-                fl = radii[0, 0] / total;
-                fr = radii[1, 0] / total;
-                rl = radii[0, 1] / total;
-                rr = radii[1, 1] / total;
-            }
-            else
-                fr = fl = rr = rl = .25f;
+            var radii = AckermannUtils.GetRadii(ackermann.Angle, ackermann.AxleSeparation, ackermann.AxleWidth);
+            var total = radii[0] + radii[1] + radii[2] + radii[3];
+            fp = radii[0] / total;
+            fs = radii[1] / total;
+            rp = radii[2] / total;
+            rs = radii[3] / total;
 
-			ackermann.FrontLeftWheel.BrakeTorque = value * maxTorque * fl;
-			ackermann.FrontRightWheel.BrakeTorque = value * maxTorque * fr;
-			ackermann.RearLeftWheel.BrakeTorque = value * maxTorque * rl;
-			ackermann.RearRightWheel.BrakeTorque = value * maxTorque * rr;
-		}
-	}
+            if (ackermann.Angle > 0) {
+                ackermann.FrontRightWheel.BrakeTorque = value * maxTorque * fp;
+                ackermann.FrontLeftWheel.BrakeTorque = value * maxTorque * fs;
+                ackermann.RearRightWheel.BrakeTorque = value * maxTorque * rp;
+                ackermann.RearLeftWheel.BrakeTorque = value * maxTorque * rs;
+            }
+            else {
+                ackermann.FrontLeftWheel.BrakeTorque = value * maxTorque * fp;
+                ackermann.FrontRightWheel.BrakeTorque = value * maxTorque * fs;
+                ackermann.RearLeftWheel.BrakeTorque = value * maxTorque * rp;
+                ackermann.RearRightWheel.BrakeTorque = value * maxTorque * rs;
+            }
+        }
+    }
 }

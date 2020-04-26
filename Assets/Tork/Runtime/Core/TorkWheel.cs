@@ -136,6 +136,8 @@ namespace Adrenak.Tork {
         }
 
         void FixedUpdate() {
+            Velocity = rigidbody.GetPointVelocity(Hit.point);
+
             transform.localEulerAngles = new Vector3(0, SteerAngle, 0);
             CalculateSuspension();
             CalculateFriction();
@@ -198,9 +200,8 @@ namespace Adrenak.Tork {
         }
 
         void CalculateFriction() {
-            Velocity = rigidbody.GetPointVelocity(Hit.point);
-
             if (!IsGrounded) return;
+
 
             // Contact basis (can be different from wheel basis)
             Vector3 normal = Hit.normal;
@@ -212,8 +213,8 @@ namespace Adrenak.Tork {
             var multiplier = Mathf.Cos(angle * Mathf.Deg2Rad);
 
             // Calculate sliding velocity (velocity without normal force)
-            Vector3 sideVel = Vector3.Dot(Velocity, side) * side * multiplier;
-            Vector3 forwardVel = Vector3.Dot(Velocity, forward) * forward * multiplier;
+            Vector3 sideVel = side * Vector3.Dot(Velocity, side) * multiplier;
+            Vector3 forwardVel = forward * Vector3.Dot(Velocity, forward) * multiplier;
             Vector3 planarVelocity2D = sideVel + forwardVel;
 
             Vector3 planarMomentum = planarVelocity2D * rigidbody.mass;
@@ -236,7 +237,6 @@ namespace Adrenak.Tork {
             longForce -= brakeResistanceForce;
 
             gripResistanceForce -= longForce;
-
             rigidbody.AddForceAtPosition(gripResistanceForce, Hit.point);
             rigidbody.AddForceAtPosition(forward * MotorTorque / radius * forwardGrip * engineShaftToWheelRatio, Hit.point);
         }

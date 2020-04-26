@@ -6,6 +6,9 @@ namespace Adrenak.Tork.Demo {
         [Header("Common")]
         public Vehicle vehicle;
         public SmoothFollow smoothFollow;
+        public Transform destination;
+
+        public bool autoDrive;
 
         IVehicleDriver driver;
         MidAirStabilization midAirStabilization;
@@ -13,16 +16,21 @@ namespace Adrenak.Tork.Demo {
         void Start() {
             midAirStabilization = vehicle.GetAddOn<MidAirStabilization>();
 
-            driver = new KeyboardVehicleDriver();
-            driver.RegisterVehicle(vehicle);
+            if (!autoDrive) {
+                driver = new KeyboardVehicleDriver();
+                driver.RegisterVehicle(vehicle);
+            }
+            else
+                vehicle.GetAddOn<AutoDrive>().enabled = true;
+
             smoothFollow.target = vehicle.transform;
         }
 
         void Update() {
-            //driver.DriveVehicles();
-
-            if (Input.GetKeyDown(KeyCode.R))
-                midAirStabilization.enabled = !midAirStabilization.enabled;
+            if (!autoDrive)
+                driver.DriveVehicles();
+            else
+                vehicle.GetAddOn<AutoDrive>().destination = destination.position;
         }
 
         void OnGUI() {
