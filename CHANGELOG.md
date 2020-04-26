@@ -1,3 +1,11 @@
+# [2.2.0](https://github.com/adrenak/tork/compare/v2.1.1...v2.2.0) (2020-04-26)
+
+
+### Features
+
+* Add AutoDrive ([22bb006](https://github.com/adrenak/tork/commit/22bb0061a6fad454f9823e947fe46e69f384ad93))
+* Add AutoDrive addon ([dbed6e1](https://github.com/adrenak/tork/commit/dbed6e171d6dafb909dce9f7ed157141a36768fe))
+
 ## [2.1.1](https://github.com/adrenak/tork/compare/v2.1.0...v2.1.1) (2020-04-24)
 
 
