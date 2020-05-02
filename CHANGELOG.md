@@ -1,3 +1,10 @@
+# [2.3.0](https://github.com/adrenak/tork/compare/v2.2.0...v2.3.0) (2020-05-02)
+
+
+### Features
+
+* Remove input stuff. ([97f4eba](https://github.com/adrenak/tork/commit/97f4eba7e52b8effff5a2ed14bd0c201b647b21f))
+
 # [2.2.0](https://github.com/adrenak/tork/compare/v2.1.1...v2.2.0) (2020-04-26)
 
 
