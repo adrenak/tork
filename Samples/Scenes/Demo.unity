@@ -112,6 +112,12 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!4 &105659653 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4261489924384528, guid: 58b5a3e507c7b68449674674e18cab44,
+    type: 3}
+  m_PrefabInstance: {fileID: 2072883566}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &114752787
 GameObject:
   m_ObjectHideFlags: 0
@@ -3881,7 +3887,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 152b8efdd6256c64fb3ad77cd3b294e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
+  target: {fileID: 105659653}
   distance: 5
   height: 1.5
   rotationDamping: 8
@@ -4003,13 +4009,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 2016063155}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 32a07620c0661354ab24415957a77749, type: 3}
+  m_Script: {fileID: 11500000, guid: b3b85e25256fd4e4da7311f52bde51c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vehicle: {fileID: 1151711987}
-  smoothFollow: {fileID: 1853051912}
-  destination: {fileID: 595338423}
-  autoDrive: 1
+  m_Vehicle: {fileID: 1151711987}
 --- !u!4 &2016063157
 Transform:
   m_ObjectHideFlags: 0

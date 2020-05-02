@@ -3,6 +3,8 @@ using UnityEngine;
 
 namespace Adrenak.Tork {
     public class Motor : MonoBehaviour {
+        [SerializeField] float idleRPM;
+
         [Tooltip("The maximum torque that the motor generates")]
         public float maxTorque = 10000;
 
@@ -11,10 +13,14 @@ namespace Adrenak.Tork {
 
         public float m_MaxReverseInput = -.5f;
 
+        [SerializeField] float rpmReadonly;
+        public float RPM { get { return rpmReadonly; } }
+
         public Ackermann ackermann;
 
         void FixedUpdate() {
             ApplyMotorTorque();
+            CalculateEngineRPM();
         }
 
         void Update() {
@@ -44,6 +50,15 @@ namespace Adrenak.Tork {
                 ackermann.RearLeftWheel.MotorTorque = value * maxTorque * rp;
                 ackermann.RearRightWheel.MotorTorque = value * maxTorque * rs;
             }
+        }
+
+        void CalculateEngineRPM() {
+            var sum = ackermann.FrontLeftWheel.RPM;
+            sum += ackermann.FrontRightWheel.RPM;
+            sum += ackermann.RearLeftWheel.RPM;
+            sum += ackermann.RearRightWheel.RPM;
+
+            rpmReadonly = idleRPM + sum;
         }
     }
 }

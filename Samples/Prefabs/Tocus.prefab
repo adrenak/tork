@@ -38,7 +38,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 255152389}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 04ba35be00207f1408fcd9d4f9881aaf, type: 3}
   m_Name: 
@@ -675,19 +675,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1da1bb9a22dc0004c803629affe1f6df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rigidbody: {fileID: 54767532765438496}
   ackermann: {fileID: 1214198106228332029}
   steering: {fileID: 1214198107381208202}
   motor: {fileID: 1214198106513114726}
   brake: {fileID: 1214198106157320312}
-  addOns:
-  - {fileID: 1214198107650998328}
-  - {fileID: 1214198107889706808}
-  - {fileID: 1214198106422026516}
-  - {fileID: 1214198107628456250}
-  - {fileID: 1214198106691927564}
-  - {fileID: 1530015582167757396}
-  - {fileID: 4502441065919909737}
-  - {fileID: 255152392}
+  addOns: []
 --- !u!1 &1166002035971444
 GameObject:
   m_ObjectHideFlags: 0
@@ -979,7 +972,6 @@ GameObject:
   - component: {fileID: 4034941481105394}
   - component: {fileID: 1927650385544942642}
   - component: {fileID: 1937006548859440174}
-  - component: {fileID: 1954678272987103162}
   m_Layer: 0
   m_Name: RL
   m_TagString: Untagged
@@ -1046,19 +1038,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!114 &1954678272987103162
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1243993277687504}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b72eb77adaa94a242836ec46ffbe98be, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  entries: []
 --- !u!1 &1311656790281508
 GameObject:
   m_ObjectHideFlags: 0
@@ -1583,7 +1562,6 @@ GameObject:
   - component: {fileID: 4732569812067590}
   - component: {fileID: 1931413126814977078}
   - component: {fileID: 1938566618271409824}
-  - component: {fileID: 1954723963721948860}
   m_Layer: 0
   m_Name: FL
   m_TagString: Untagged
@@ -1650,19 +1628,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!114 &1954723963721948860
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1576848716418974}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b72eb77adaa94a242836ec46ffbe98be, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  entries: []
 --- !u!1 &1581806044544236
 GameObject:
   m_ObjectHideFlags: 0
@@ -2096,7 +2061,6 @@ GameObject:
   - component: {fileID: 4739135267531380}
   - component: {fileID: 1931387474880817522}
   - component: {fileID: 1937690708180490964}
-  - component: {fileID: 1954795816283824388}
   m_Layer: 0
   m_Name: RR
   m_TagString: Untagged
@@ -2163,19 +2127,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!114 &1954795816283824388
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1736395382457428}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b72eb77adaa94a242836ec46ffbe98be, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  entries: []
 --- !u!1 &1747655489329494
 GameObject:
   m_ObjectHideFlags: 0
@@ -2766,7 +2717,6 @@ GameObject:
   - component: {fileID: 4346771767283920}
   - component: {fileID: 1928415736752769256}
   - component: {fileID: 1938298222646736474}
-  - component: {fileID: 1955557788347080344}
   m_Layer: 0
   m_Name: FR
   m_TagString: Untagged
@@ -2833,19 +2783,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!114 &1955557788347080344
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1940818199909830}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b72eb77adaa94a242836ec46ffbe98be, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  entries: []
 --- !u!1 &1963444167204864
 GameObject:
   m_ObjectHideFlags: 0
@@ -2979,7 +2916,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ackermann: {fileID: 1214198106228332029}
-  maxTorque: 1000
+  maxTorque: 500
   value: 0
 --- !u!1 &1214198106228332026
 GameObject:
@@ -3117,9 +3054,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a28b5a52112c97342bb0ca5d468e15b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  idleRPM: 600
   maxTorque: 500
   value: 0
   m_MaxReverseInput: -0.5
+  rpmReadonly: 0
   ackermann: {fileID: 1214198106228332029}
 --- !u!1 &1214198106691927562
 GameObject:
@@ -3159,7 +3098,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1214198106691927562}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3ea26387ab63fdc4088fabfe3a742a8e, type: 3}
   m_Name: 
