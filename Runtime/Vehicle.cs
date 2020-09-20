@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Adrenak.Tork {
     public class Vehicle : MonoBehaviour {
-        [SerializeField] Rigidbody rigidbody;
+        [SerializeField] new Rigidbody rigidbody;
         public Rigidbody Rigidbody { get { return rigidbody; } }
 
         [Header("Core Components")]

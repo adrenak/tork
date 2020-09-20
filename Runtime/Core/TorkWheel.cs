@@ -1,8 +1,20 @@
-﻿using UnityEngine;
+﻿/*
+ * NOTE (A)
+ * A car with wheels of diameter ~55cm usually has axle of diameter 2.2cm. That's a ratio of 25.
+   Could not get values of real cars to verify the 55 and 2.2 cm claim but hat's what I've read somewhere 
+   in a physics problem. This gets me good results. For example: A Civic has 170Nm of torque, at the first 
+   gear that's about 530Nm of torque after transmission with a gear ratio of 3.1. If I set the max toque 
+   in the motor at 530, I get an acceleration that I'd expect when someone in a Civic floors it.
+
+   I'd imagine heavier vehicles have thicker axles, but their wheels are also large, so may be the 
+   ratio would still hold. Or maybe it won't. Please change the value as you prefer.
+ */
+
+using UnityEngine;
 
 namespace Adrenak.Tork {
     public class TorkWheel : MonoBehaviour {
-        // See at the bottom of the file for NOTE (A) to read about this.
+        // See at the top of the file for NOTE (A) to read about this.
         const float engineShaftToWheelRatio = 25;
 
         [Tooltip("The radius of the wheel")]
@@ -121,7 +133,8 @@ namespace Adrenak.Tork {
 
         Ray m_Ray;
         new Rigidbody rigidbody;
-        public const float k_RayStartHeight = 1;
+        public const float k_ExtraRayLegnth = 1;
+        public float RayLength => suspensionDistance + radius + k_ExtraRayLegnth;
 
         void Start() {
             m_Ray = new Ray();
@@ -136,9 +149,13 @@ namespace Adrenak.Tork {
         }
 
         void FixedUpdate() {
-            Velocity = rigidbody.GetPointVelocity(Hit.point);
+            Velocity = rigidbody.GetPointVelocity(transform.position);   // Now
 
-            transform.localEulerAngles = new Vector3(0, SteerAngle, 0);
+            transform.localEulerAngles = new Vector3(
+                transform.localEulerAngles.x, 
+                SteerAngle, 
+                transform.localEulerAngles.z
+            );
             CalculateSuspension();
             CalculateFriction();
             CalculateRPM();
@@ -151,23 +168,20 @@ namespace Adrenak.Tork {
         }
 
         void CalculateSuspension() {
-            float rayLen = GetRayLen();
-            m_Ray.direction = -transform.up.normalized;
-            m_Ray.origin = transform.position + transform.up * k_RayStartHeight;
+            m_Ray.direction = -transform.up;
+            m_Ray.origin = transform.position + transform.up * k_ExtraRayLegnth;
 
-            IsGrounded = WheelRaycast(rayLen, ref m_Hit);
+            IsGrounded = WheelRaycast(RayLength, ref m_Hit);
             // If we did not hit, relax the spring and return
             if (!IsGrounded) {
                 m_PrevCompressionDist = CompressionDistance;
                 CompressionDistance = CompressionDistance - Time.fixedDeltaTime * relaxRate;
                 CompressionDistance = Mathf.Clamp(CompressionDistance, 0, suspensionDistance);
-
-                IsGrounded = false;
                 return;
             }
 
             var force = 0.0f;
-            CompressionDistance = rayLen - Hit.distance;
+            CompressionDistance = RayLength - Hit.distance;
             CompressionDistance = Mathf.Clamp(CompressionDistance, 0, suspensionDistance);
             CompressionRatio = CompressionDistance / suspensionDistance;
 
@@ -179,29 +193,23 @@ namespace Adrenak.Tork {
             float rate = (m_PrevCompressionDist - CompressionDistance) / Time.fixedDeltaTime;
             m_PrevCompressionDist = CompressionDistance;
 
-            float damperForce = rate * stiffness * (1 - dampingFactor);
-            force -= damperForce;
+            float dampingForce = rate * stiffness * dampingFactor;
+            force -= dampingForce;
 
-            force *= Vector3.Dot(Hit.normal, transform.up);
             SuspensionForce = transform.up * force;
 
             // Apply suspension force
             rigidbody.AddForceAtPosition(SuspensionForce, (Hit.point));
         }
 
-        bool WheelRaycast(float maxDistance, ref RaycastHit nearestHit) {
-            RaycastHit hit;
-
-            if (Physics.Raycast(m_Ray.origin, m_Ray.direction, out hit, maxDistance, m_RaycastLayers)) {
-                nearestHit = hit;
+        bool WheelRaycast(float maxDistance, ref RaycastHit hit) {
+            if (Physics.Raycast(m_Ray.origin, m_Ray.direction, out hit, maxDistance, m_RaycastLayers))
                 return true;
-            }
             return false;
         }
 
         void CalculateFriction() {
             if (!IsGrounded) return;
-
 
             // Contact basis (can be different from wheel basis)
             Vector3 normal = Hit.normal;
@@ -240,21 +248,5 @@ namespace Adrenak.Tork {
             rigidbody.AddForceAtPosition(gripResistanceForce, Hit.point);
             rigidbody.AddForceAtPosition(forward * MotorTorque / radius * forwardGrip * engineShaftToWheelRatio, Hit.point);
         }
-        
-        public float GetRayLen() {
-            return suspensionDistance + radius + k_RayStartHeight;
-        }
     }
 }
-
-/*
- * NOTE (A)
- * A car with wheels of diameter ~55cm usually has axle of diameter 2.2cm. That's a ratio of 25.
-   Could not get values of real cars to verify the 55 and 2.2 cm cliam but hat's what I've read somewhere 
-   in a physics problem. This gets me good results. For example: A Civic has 170Nm of torque, at the first 
-   gear that's about 530Nm of torque after transmission with a gear ratio of 3.1. If I set the max toque 
-   in the motor at 530, I get an acceleration that I'd expect when someone in a Civic floors it.
-
-   I'd imagine heavier vehicles have thicker axles, but their wheels are also large, so may be the 
-   ratio would still hold. Or maybe it won't. Please change the value as you prefer.
- */
