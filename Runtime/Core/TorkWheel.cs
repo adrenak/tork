@@ -12,6 +12,7 @@
 
 using System.Net.NetworkInformation;
 using UnityEngine;
+using UnityEngine.Assertions.Must;
 
 namespace Adrenak.Tork {
     public class TorkWheel : MonoBehaviour {
@@ -132,6 +133,8 @@ namespace Adrenak.Tork {
         /// </summary>
         public Vector3 SuspensionForce { get; private set; }
 
+        public float frictionCoeff;
+
         Ray m_Ray;
         new Rigidbody rigidbody;
         public const float k_ExtraRayLegnth = 1;
@@ -209,46 +212,41 @@ namespace Adrenak.Tork {
             return false;
         }
 
-        Vector3 lastVelocity = Vector3.zero;
         void CalculateFriction() {
             if (!IsGrounded) return;
 
             // Contact basis (can be different from wheel basis)
             Vector3 right = transform.right;
-            right = Vector3.ProjectOnPlane(right, Hit.normal).normalized;
             Vector3 forward = transform.forward;
-            forward = Vector3.ProjectOnPlane(forward, Hit.normal).normalized;
-
             Vector3 Velocity = rigidbody.GetPointVelocity(Hit.point);
-            Velocity = Vector3.ProjectOnPlane(Velocity, Hit.normal);
 
-            Vector3 SideVelocity = Vector3.Project(Velocity, right);
+            var Vf = Vector3.Project(Velocity, forward).magnitude;
+            var Vl = Vector3.Project(Velocity, right).magnitude;
+            var N = SuspensionForce.magnitude;
+            var f = frictionCoeff;
 
-            Vector3 momentum = SideVelocity * rigidbody.mass / 4; //* SuspensionForce.magnitude / 9.8f;
-            Vector3 frictionForce = -momentum * sidewaysGrip;
+            var Favail = N * f;
+            var Ff = MotorTorque / radius;
+            var Fl = Vl / Vf * N;
+            var Ft = Mathf.Sqrt(Ff * Ff + Fl * Fl);
+            
+            var Fs = Favail / Ft;
+            var Fmax = Ft * Fs;
 
-            Vector3 grip = -SideVelocity * SuspensionForce.magnitude * sidewaysGrip;
+            var Flapplied = Fl * Fs;
+            var Ffmax = Ff * Fs;
+            var Ffa = Mathf.Clamp(Ff, 0, Ffmax);
 
-            rigidbody.AddForceAtPosition(frictionForce + grip, Hit.point);
+            rigidbody.AddForceAtPosition(-Vector3.Project(Velocity, right).normalized * Flapplied, Hit.point);
+            //-Vector3.Project(Velocity, right).normalized * Flapplied, Hit.point);
+            Debug.Log(Ffa);
+            rigidbody.AddForceAtPosition(forward * Ffa * engineShaftToWheelRatio, Hit.point);
+                //-Vector3.Project(Velocity, forward).normalized * Fla, Hit.point);
 
-            Vector3 forwardVel = forward * Vector3.Dot(Velocity, forward);
-            float availableFriction = SuspensionForce.magnitude;
-            if (forwardVel.magnitude > .1f) {
-                var _rollingFriction = availableFriction * rollingFriction;
-                rigidbody.AddForceAtPosition(-forwardVel.normalized * _rollingFriction, Hit.point);
-                availableFriction -= _rollingFriction;
-            }
-
-            //var sideForce = rigidbody.mass / 4 * (sideVel.magnitude - lastSideVelMag)/ Time.fixedDeltaTime;
-            //lastSideVelMag = sideVel.magnitude;
-            //var friction = -sideVel.normalized * Mathf.Abs(sideForce);
-            //rigidbody.AddForceAtPosition(friction, Hit.point);
-
-            var motorForce = MotorTorque / radius * engineShaftToWheelRatio;
-            float latFrictionMultiplier = Mathf.Abs(motorForce) < availableFriction ? 1 : forwardGrip;
-            var forwardFriction = motorForce * latFrictionMultiplier;
-            rigidbody.AddForceAtPosition(forward * forwardFriction, Hit.point);
-
+            //if (Fld > 0)
+            //    Debug.Log("Spinning");
+            //else
+            //    Debug.Log("Breaking");
         }
     }
 }
