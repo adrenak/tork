@@ -134,6 +134,7 @@ namespace Adrenak.Tork {
         public Vector3 SuspensionForce { get; private set; }
 
         public float frictionCoeff;
+        public float driftiness;
 
         Ray m_Ray;
         new Rigidbody rigidbody;
@@ -223,30 +224,24 @@ namespace Adrenak.Tork {
             var Vf = Vector3.Project(Velocity, forward).magnitude;
             var Vl = Vector3.Project(Velocity, right).magnitude;
             var N = SuspensionForce.magnitude;
-            var f = frictionCoeff;
 
-            var Favail = N * f;
+            var Favail = N * frictionCoeff;
             var Ff = MotorTorque / radius;
-            var Fl = Vl / Vf * N;
+            var Fl = Vl / Vf * N * frictionCoeff;
             var Ft = Mathf.Sqrt(Ff * Ff + Fl * Fl);
             
             var Fs = Favail / Ft;
-            var Fmax = Ft * Fs;
 
             var Flapplied = Fl * Fs;
             var Ffmax = Ff * Fs;
-            var Ffa = Mathf.Clamp(Ff, 0, Ffmax);
+            float Ffa;
+            if (Ff > 0)
+                Ffa = Mathf.Clamp(Ff, 0, Ffmax);
+            else
+                Ffa = Mathf.Clamp(Ff, Ffmax, 0);
 
             rigidbody.AddForceAtPosition(-Vector3.Project(Velocity, right).normalized * Flapplied, Hit.point);
-            //-Vector3.Project(Velocity, right).normalized * Flapplied, Hit.point);
-            Debug.Log(Ffa);
             rigidbody.AddForceAtPosition(forward * Ffa * engineShaftToWheelRatio, Hit.point);
-                //-Vector3.Project(Velocity, forward).normalized * Fla, Hit.point);
-
-            //if (Fld > 0)
-            //    Debug.Log("Spinning");
-            //else
-            //    Debug.Log("Breaking");
         }
     }
 }

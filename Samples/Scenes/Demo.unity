@@ -2595,6 +2595,18 @@ Transform:
   m_Father: {fileID: 1193580804}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1151711987 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 114480416164222720, guid: 58b5a3e507c7b68449674674e18cab44,
+    type: 3}
+  m_PrefabInstance: {fileID: 2072883566}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1da1bb9a22dc0004c803629affe1f6df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1193580803
 GameObject:
   m_ObjectHideFlags: 0
@@ -4000,7 +4012,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3b85e25256fd4e4da7311f52bde51c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Vehicle: {fileID: 0}
+  m_Vehicle: {fileID: 1151711987}
 --- !u!4 &2016063157
 Transform:
   m_ObjectHideFlags: 0
@@ -4028,7 +4040,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1132797446414550, guid: 58b5a3e507c7b68449674674e18cab44, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4261489924384528, guid: 58b5a3e507c7b68449674674e18cab44, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4214,6 +4226,21 @@ PrefabInstance:
       propertyPath: curve2.m_Curve.Array.data[3].inWeight
       value: 0.22396031
       objectReference: {fileID: 0}
+    - target: {fileID: 1954840075906366550, guid: 58b5a3e507c7b68449674674e18cab44,
+        type: 3}
+      propertyPath: frictionCoeff
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1954840075906366550, guid: 58b5a3e507c7b68449674674e18cab44,
+        type: 3}
+      propertyPath: forwardFrictionCoeff
+      value: 0.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1954840075906366550, guid: 58b5a3e507c7b68449674674e18cab44,
+        type: 3}
+      propertyPath: lateralFrictionCoeff
+      value: 0.75
+      objectReference: {fileID: 0}
     - target: {fileID: 1955367046092286648, guid: 58b5a3e507c7b68449674674e18cab44,
         type: 3}
       propertyPath: curve2.m_Curve.Array.size
@@ -4344,6 +4371,21 @@ PrefabInstance:
       propertyPath: curve2.m_Curve.Array.data[3].inWeight
       value: 0.22396031
       objectReference: {fileID: 0}
+    - target: {fileID: 1955367046092286648, guid: 58b5a3e507c7b68449674674e18cab44,
+        type: 3}
+      propertyPath: frictionCoeff
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1955367046092286648, guid: 58b5a3e507c7b68449674674e18cab44,
+        type: 3}
+      propertyPath: forwardFrictionCoeff
+      value: 0.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1955367046092286648, guid: 58b5a3e507c7b68449674674e18cab44,
+        type: 3}
+      propertyPath: lateralFrictionCoeff
+      value: 0.75
+      objectReference: {fileID: 0}
     - target: {fileID: 1954582843850377584, guid: 58b5a3e507c7b68449674674e18cab44,
         type: 3}
       propertyPath: curve2.m_Curve.Array.size
@@ -4474,6 +4516,21 @@ PrefabInstance:
       propertyPath: curve2.m_Curve.Array.data[3].inWeight
       value: 0.22396031
       objectReference: {fileID: 0}
+    - target: {fileID: 1954582843850377584, guid: 58b5a3e507c7b68449674674e18cab44,
+        type: 3}
+      propertyPath: frictionCoeff
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1954582843850377584, guid: 58b5a3e507c7b68449674674e18cab44,
+        type: 3}
+      propertyPath: forwardFrictionCoeff
+      value: 0.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1954582843850377584, guid: 58b5a3e507c7b68449674674e18cab44,
+        type: 3}
+      propertyPath: lateralFrictionCoeff
+      value: 0.75
+      objectReference: {fileID: 0}
     - target: {fileID: 1955409033215586952, guid: 58b5a3e507c7b68449674674e18cab44,
         type: 3}
       propertyPath: curve2.m_Curve.Array.size
@@ -4603,11 +4660,31 @@ PrefabInstance:
         type: 3}
       propertyPath: curve2.m_Curve.Array.data[3].inWeight
       value: 0.22396031
+      objectReference: {fileID: 0}
+    - target: {fileID: 1955409033215586952, guid: 58b5a3e507c7b68449674674e18cab44,
+        type: 3}
+      propertyPath: frictionCoeff
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1955409033215586952, guid: 58b5a3e507c7b68449674674e18cab44,
+        type: 3}
+      propertyPath: forwardFrictionCoeff
+      value: 0.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1955409033215586952, guid: 58b5a3e507c7b68449674674e18cab44,
+        type: 3}
+      propertyPath: lateralFrictionCoeff
+      value: 0.75
       objectReference: {fileID: 0}
     - target: {fileID: 1214198106691927564, guid: 58b5a3e507c7b68449674674e18cab44,
         type: 3}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1214198106513114726, guid: 58b5a3e507c7b68449674674e18cab44,
+        type: 3}
+      propertyPath: maxTorque
+      value: 350
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 58b5a3e507c7b68449674674e18cab44, type: 3}
