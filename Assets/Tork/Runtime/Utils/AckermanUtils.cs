@@ -10,11 +10,12 @@ namespace Adrenak.Tork {
         /// <param name="width">Distance between left and right wheels</param>
         /// <returns></returns>
         public static float GetSecondaryAngle(float primaryAngle, float separation, float width) {
-            // To avoid NaN we assume primaryAngle to be at least 1
-            primaryAngle = Mathf.Clamp(primaryAngle, 1, Mathf.Infinity);
+            // To avoid NaN assume primary angle isn't within [-1,1]
+            if (Mathf.Abs(primaryAngle) < 1)
+                primaryAngle = Mathf.Abs(primaryAngle);
             float close = separation / Mathf.Tan(Mathf.Abs(primaryAngle) * Mathf.Deg2Rad);
             float far = close + width;
-            return Mathf.Atan(separation / far) * Mathf.Rad2Deg;
+            return Mathf.Sign(primaryAngle) * Mathf.Atan(separation / far) * Mathf.Rad2Deg;
         }
 
         /// <summary>

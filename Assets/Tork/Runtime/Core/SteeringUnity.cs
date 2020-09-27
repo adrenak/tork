@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 
 namespace Adrenak.Tork {
-    public class Steering : MonoBehaviour {
+    public class SteeringUnity : MonoBehaviour {
         public float range = 35;
         public float value; // 0..1
         public float rate = 45;
 
-        public Ackermann ackermann;
+        public AckermannUnity ackermann;
         float m_CurrAngle;
 
         public float Angle {

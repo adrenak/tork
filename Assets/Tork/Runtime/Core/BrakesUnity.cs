@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
 namespace Adrenak.Tork {
-    public class Brakes : MonoBehaviour {
-        public Ackermann ackermann;
+    public class BrakesUnity : MonoBehaviour {
+        public AckermannUnity ackermann;
 
         [Tooltip("The maximum braking torque that can be applied")]
         [SerializeField] float maxTorque = 5000;
@@ -24,16 +24,16 @@ namespace Adrenak.Tork {
             rs = radii[3] / total;
 
             if (ackermann.angle > 0) {
-                ackermann.FrontRightWheel.BrakeTorque = value * maxTorque * fp;
-                ackermann.FrontLeftWheel.BrakeTorque = value * maxTorque * fs;
-                ackermann.RearRightWheel.BrakeTorque = value * maxTorque * rp;
-                ackermann.RearLeftWheel.BrakeTorque = value * maxTorque * rs;
+                ackermann.FrontRightWheel.brakeTorque = value * maxTorque * fp;
+                ackermann.FrontLeftWheel.brakeTorque = value * maxTorque * fs;
+                ackermann.RearRightWheel.brakeTorque = value * maxTorque * rp;
+                ackermann.RearLeftWheel.brakeTorque = value * maxTorque * rs;
             }
             else {
-                ackermann.FrontLeftWheel.BrakeTorque = value * maxTorque * fp;
-                ackermann.FrontRightWheel.BrakeTorque = value * maxTorque * fs;
-                ackermann.RearLeftWheel.BrakeTorque = value * maxTorque * rp;
-                ackermann.RearRightWheel.BrakeTorque = value * maxTorque * rs;
+                ackermann.FrontLeftWheel.brakeTorque = value * maxTorque * fp;
+                ackermann.FrontRightWheel.brakeTorque = value * maxTorque * fs;
+                ackermann.RearLeftWheel.brakeTorque = value * maxTorque * rp;
+                ackermann.RearRightWheel.brakeTorque = value * maxTorque * rs;
             }
         }
     }
