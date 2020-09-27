@@ -1,21 +1,20 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace Adrenak.Tork {
-    /// <summary>
-    /// An implementation of Ackermann steering mechanism
-    /// </summary>
-    public class Ackermann : MonoBehaviour {
-        [SerializeField] TorkWheel m_FrontRight;
-        public TorkWheel FrontRightWheel { get { return m_FrontRight; } }
+    public class AckermannUnity : MonoBehaviour {
+        [SerializeField] WheelCollider m_FrontRight;
+        public WheelCollider FrontRightWheel { get { return m_FrontRight; } }
 
-        [SerializeField] TorkWheel m_FrontLeft;
-        public TorkWheel FrontLeftWheel { get { return m_FrontLeft; } }
+        [SerializeField] WheelCollider m_FrontLeft;
+        public WheelCollider FrontLeftWheel { get { return m_FrontLeft; } }
 
-        [SerializeField] TorkWheel m_RearRight;
-        public TorkWheel RearRightWheel { get { return m_RearRight; } }
+        [SerializeField] WheelCollider m_RearRight;
+        public WheelCollider RearRightWheel { get { return m_RearRight; } }
 
-        [SerializeField] TorkWheel m_RearLeft;
-        public TorkWheel RearLeftWheel { get { return m_RearLeft; } }
+        [SerializeField] WheelCollider m_RearLeft;
+        public WheelCollider RearLeftWheel { get { return m_RearLeft; } }
 
         public float angle;
 
@@ -28,24 +27,24 @@ namespace Adrenak.Tork {
         }
 
         public float FrontRightRadius {
-            get { return AxleSeparation / Mathf.Sin(Mathf.Abs(m_FrontRight.SteerAngle)); }
+            get { return AxleSeparation / Mathf.Sin(Mathf.Abs(m_FrontRight.steerAngle)); }
         }
 
         public float FrontLeftRadius {
-            get { return AxleSeparation / Mathf.Sin(Mathf.Abs(m_FrontLeft.SteerAngle)); }
+            get { return AxleSeparation / Mathf.Sin(Mathf.Abs(m_FrontLeft.steerAngle)); }
         }
 
         void Update() {
             var farAngle = AckermannUtils.GetSecondaryAngle(angle, AxleSeparation, AxleWidth);
 
             // The rear wheels are always at 0 steer in Ackermann
-            m_RearLeft.SteerAngle = m_RearRight.SteerAngle = 0;
+            m_RearLeft.steerAngle = m_RearRight.steerAngle = 0;
 
             if (Mathf.Approximately(angle, 0))
-                m_FrontRight.SteerAngle = m_FrontLeft.SteerAngle = 0;
-            
-            m_FrontLeft.SteerAngle = angle;
-            m_FrontRight.SteerAngle = farAngle;
+                m_FrontRight.steerAngle = m_FrontLeft.steerAngle = 0;
+
+            m_FrontLeft.steerAngle = angle;
+            m_FrontRight.steerAngle = farAngle;
         }
 
         public Vector3 GetPivot() {

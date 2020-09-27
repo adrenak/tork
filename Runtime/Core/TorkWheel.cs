@@ -10,6 +10,7 @@
    ratio would still hold. Or maybe it won't. Please change the value as you prefer.
  */
 
+using System.Net.NetworkInformation;
 using UnityEngine;
 
 namespace Adrenak.Tork {
@@ -149,7 +150,7 @@ namespace Adrenak.Tork {
         }
 
         void FixedUpdate() {
-            Velocity = rigidbody.GetPointVelocity(transform.position);   // Now
+            Velocity = rigidbody.GetPointVelocity(transform.position);
 
             transform.localEulerAngles = new Vector3(
                 transform.localEulerAngles.x, 
@@ -164,7 +165,7 @@ namespace Adrenak.Tork {
         void CalculateRPM() {
             float metersPerMinute = rigidbody.velocity.magnitude * 60;
             float wheelCircumference = 2 * Mathf.PI * radius;
-            RPM = metersPerMinute / wheelCircumference;
+            //RPM = metersPerMinute / wheelCircumference;
         }
 
         void CalculateSuspension() {
@@ -208,45 +209,46 @@ namespace Adrenak.Tork {
             return false;
         }
 
+        Vector3 lastVelocity = Vector3.zero;
         void CalculateFriction() {
             if (!IsGrounded) return;
 
             // Contact basis (can be different from wheel basis)
-            Vector3 normal = Hit.normal;
-            Vector3 side = transform.right;
+            Vector3 right = transform.right;
+            right = Vector3.ProjectOnPlane(right, Hit.normal).normalized;
             Vector3 forward = transform.forward;
+            forward = Vector3.ProjectOnPlane(forward, Hit.normal).normalized;
 
-            // Apply less force if the vehicle is tilted
-            var angle = Vector3.Angle(normal, transform.up);
-            var multiplier = Mathf.Cos(angle * Mathf.Deg2Rad);
+            Vector3 Velocity = rigidbody.GetPointVelocity(Hit.point);
+            Velocity = Vector3.ProjectOnPlane(Velocity, Hit.normal);
 
-            // Calculate sliding velocity (velocity without normal force)
-            Vector3 sideVel = side * Vector3.Dot(Velocity, side) * multiplier;
-            Vector3 forwardVel = forward * Vector3.Dot(Velocity, forward) * multiplier;
-            Vector3 planarVelocity2D = sideVel + forwardVel;
+            Vector3 SideVelocity = Vector3.Project(Velocity, right);
 
-            Vector3 planarMomentum = planarVelocity2D * rigidbody.mass;
+            Vector3 momentum = SideVelocity * rigidbody.mass / 4; //* SuspensionForce.magnitude / 9.8f;
+            Vector3 frictionForce = -momentum * sidewaysGrip;
 
-            // NOTE: I have little idea how this code works 
-            // It can be drawn on a graph to see what's happening but I haven't
-            // had the time to make it more readable. If you improve it, please make a pull request.
-            var latForce = Vector3.Dot(-planarMomentum, side) * side * sidewaysGrip;
-            var longForce = Vector3.Dot(-planarMomentum, forward) * forward * forwardGrip;
-            Vector3 gripResistanceForce = latForce + longForce;
+            Vector3 grip = -SideVelocity * SuspensionForce.magnitude * sidewaysGrip;
 
-            // Apply rolling resistance friction
-            float rollingResistanceForceMag = 1 - rollingFriction;
-            longForce *= rollingResistanceForceMag;
+            rigidbody.AddForceAtPosition(frictionForce + grip, Hit.point);
 
-            // Apply brake resistance force
-            var brakeResistanceForceMag = BrakeTorque / radius;
-            brakeResistanceForceMag = Mathf.Clamp(brakeResistanceForceMag, 0, longForce.magnitude);
-            Vector3 brakeResistanceForce = longForce.normalized * brakeResistanceForceMag * engineShaftToWheelRatio;
-            longForce -= brakeResistanceForce;
+            Vector3 forwardVel = forward * Vector3.Dot(Velocity, forward);
+            float availableFriction = SuspensionForce.magnitude;
+            if (forwardVel.magnitude > .1f) {
+                var _rollingFriction = availableFriction * rollingFriction;
+                rigidbody.AddForceAtPosition(-forwardVel.normalized * _rollingFriction, Hit.point);
+                availableFriction -= _rollingFriction;
+            }
 
-            gripResistanceForce -= longForce;
-            rigidbody.AddForceAtPosition(gripResistanceForce, Hit.point);
-            rigidbody.AddForceAtPosition(forward * MotorTorque / radius * forwardGrip * engineShaftToWheelRatio, Hit.point);
+            //var sideForce = rigidbody.mass / 4 * (sideVel.magnitude - lastSideVelMag)/ Time.fixedDeltaTime;
+            //lastSideVelMag = sideVel.magnitude;
+            //var friction = -sideVel.normalized * Mathf.Abs(sideForce);
+            //rigidbody.AddForceAtPosition(friction, Hit.point);
+
+            var motorForce = MotorTorque / radius * engineShaftToWheelRatio;
+            float latFrictionMultiplier = Mathf.Abs(motorForce) < availableFriction ? 1 : forwardGrip;
+            var forwardFriction = motorForce * latFrictionMultiplier;
+            rigidbody.AddForceAtPosition(forward * forwardFriction, Hit.point);
+
         }
     }
 }

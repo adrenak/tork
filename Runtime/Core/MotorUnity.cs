@@ -2,7 +2,7 @@
 using UnityEngine;
 
 namespace Adrenak.Tork {
-    public class Motor : MonoBehaviour {
+    public class MotorUnity : MonoBehaviour {
         [SerializeField] float idleRPM;
 
         [Tooltip("The maximum torque that the motor generates")]
@@ -16,7 +16,7 @@ namespace Adrenak.Tork {
         [SerializeField] float rpmReadonly;
         public float RPM { get { return rpmReadonly; } }
 
-        public Ackermann ackermann;
+        public AckermannUnity ackermann;
 
         void FixedUpdate() {
             ApplyMotorTorque();
@@ -39,24 +39,24 @@ namespace Adrenak.Tork {
             rs = radii[3] / total;
 
             if (ackermann.angle > 0) {
-                ackermann.FrontRightWheel.MotorTorque = value * maxTorque * fp;
-                ackermann.FrontLeftWheel.MotorTorque = value * maxTorque * fs;
-                ackermann.RearRightWheel.MotorTorque = value * maxTorque * rp;
-                ackermann.RearLeftWheel.MotorTorque = value * maxTorque * rs;
+                ackermann.FrontRightWheel.motorTorque = value * maxTorque * fp;
+                ackermann.FrontLeftWheel.motorTorque = value * maxTorque * fs;
+                ackermann.RearRightWheel.motorTorque = value * maxTorque * rp;
+                ackermann.RearLeftWheel.motorTorque = value * maxTorque * rs;
             }
             else {
-                ackermann.FrontLeftWheel.MotorTorque = value * maxTorque * fp;
-                ackermann.FrontRightWheel.MotorTorque = value * maxTorque * fs;
-                ackermann.RearLeftWheel.MotorTorque = value * maxTorque * rp;
-                ackermann.RearRightWheel.MotorTorque = value * maxTorque * rs;
+                ackermann.FrontLeftWheel.motorTorque = value * maxTorque * fp;
+                ackermann.FrontRightWheel.motorTorque = value * maxTorque * fs;
+                ackermann.RearLeftWheel.motorTorque = value * maxTorque * rp;
+                ackermann.RearRightWheel.motorTorque = value * maxTorque * rs;
             }
         }
 
         void CalculateEngineRPM() {
-            var sum = ackermann.FrontLeftWheel.RPM;
-            sum += ackermann.FrontRightWheel.RPM;
-            sum += ackermann.RearLeftWheel.RPM;
-            sum += ackermann.RearRightWheel.RPM;
+            var sum = ackermann.FrontLeftWheel.rpm;
+            sum += ackermann.FrontRightWheel.rpm;
+            sum += ackermann.RearLeftWheel.rpm;
+            sum += ackermann.RearRightWheel.rpm;
 
             rpmReadonly = idleRPM + sum;
         }
