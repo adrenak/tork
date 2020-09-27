@@ -213,7 +213,7 @@ namespace Adrenak.Tork {
             return false;
         }
 
-        void CalculateFriction() {
+        void CalculateFriction_Uncharted4() {
             if (!IsGrounded) return;
 
             // Contact basis (can be different from wheel basis)
@@ -234,6 +234,48 @@ namespace Adrenak.Tork {
 
             var Flapplied = Fl * Fs;
             var Ffmax = Ff * Fs;
+            float Ffa;
+            if (Ff > 0)
+                Ffa = Mathf.Clamp(Ff, 0, Ffmax);
+            else
+                Ffa = Mathf.Clamp(Ff, Ffmax, 0);
+
+            rigidbody.AddForceAtPosition(-Vector3.Project(Velocity, right).normalized * Flapplied, Hit.point);
+            rigidbody.AddForceAtPosition(forward * Ffa * engineShaftToWheelRatio, Hit.point);
+        }
+
+        public float esslip;
+        public float grip;
+        public float drift;
+
+        WheelFrictionCurve curve;
+
+        void CalculateFriction() {
+            if (!IsGrounded) return;
+
+            curve.extremumSlip = esslip;
+            curve.extremumValue = esslip * grip;
+            curve.asymptoteSlip = esslip * 1.5f;
+            curve.asymptoteValue = esslip * drift;
+
+            // Contact basis (can be different from wheel basis)
+            Vector3 right = transform.right;
+            Vector3 forward = transform.forward;
+            Vector3 Velocity = rigidbody.GetPointVelocity(Hit.point);
+
+            var Vf = Vector3.Project(Velocity, forward).magnitude;
+            var Vl = Vector3.Project(Velocity, right).magnitude;
+            var N = SuspensionForce.magnitude;
+
+            var Ff = MotorTorque / radius;
+            var Fl = curve.Evaluate(Vl);
+            Debug.Log(Vl);
+            //Debug.Log(Vl > curve.extremumSlip ? "Slipping" : "Gripping");
+
+            var Fs = 1;
+
+            var Flapplied = Fl * Fs;
+            var Ffmax = Ff * frictionCoeff;
             float Ffa;
             if (Ff > 0)
                 Ffa = Mathf.Clamp(Ff, 0, Ffmax);
