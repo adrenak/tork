@@ -15,5 +15,13 @@ namespace Adrenak.Tork {
             bool groundedL = WheelL.GetGroundHit(out hit);
             return hit;
         }
+
+        public static float Evaluate(this WheelFrictionCurve curve, float slip) {
+            if (slip < curve.extremumSlip)
+                return slip * curve.extremumValue / curve.extremumSlip;
+            else
+                //return curve.asymptoteValue;
+                return ((slip - curve.asymptoteSlip) * (curve.extremumValue - curve.asymptoteValue) / (curve.extremumSlip - curve.asymptoteSlip)) + curve.asymptoteValue;
+        }
     }
 }
