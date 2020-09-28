@@ -992,7 +992,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curve:
     maxCoeff: 0.7
-    minCoeff: 0.4
+    minCoeff: 0.5
     softness: 15
     criticalSlip: 15
 --- !u!1 &448470856
@@ -1288,7 +1288,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curve:
     maxCoeff: 0.7
-    minCoeff: 0.4
+    minCoeff: 0.5
     softness: 15
     criticalSlip: 15
 --- !u!1 &712748576
@@ -2173,7 +2173,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curve:
     maxCoeff: 0.7
-    minCoeff: 0.4
+    minCoeff: 0.5
     softness: 10
     criticalSlip: 15
 --- !u!1 &968674519
@@ -2919,7 +2919,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curve:
     maxCoeff: 0.7
-    minCoeff: 0.4
+    minCoeff: 0.5
     softness: 10
     criticalSlip: 15
 --- !u!1 &1279867582
@@ -4272,7 +4272,7 @@ PrefabInstance:
     - target: {fileID: 54767532765438496, guid: 58b5a3e507c7b68449674674e18cab44,
         type: 3}
       propertyPath: m_Drag
-      value: 0.33
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 1214198107381208202, guid: 58b5a3e507c7b68449674674e18cab44,
         type: 3}
@@ -4427,7 +4427,7 @@ PrefabInstance:
     - target: {fileID: 1954840075906366550, guid: 58b5a3e507c7b68449674674e18cab44,
         type: 3}
       propertyPath: forwardFrictionCoeff
-      value: 1
+      value: 0.9
       objectReference: {fileID: 0}
     - target: {fileID: 1954840075906366550, guid: 58b5a3e507c7b68449674674e18cab44,
         type: 3}
@@ -4782,7 +4782,7 @@ PrefabInstance:
     - target: {fileID: 1955367046092286648, guid: 58b5a3e507c7b68449674674e18cab44,
         type: 3}
       propertyPath: forwardFrictionCoeff
-      value: 1
+      value: 0.9
       objectReference: {fileID: 0}
     - target: {fileID: 1955367046092286648, guid: 58b5a3e507c7b68449674674e18cab44,
         type: 3}
@@ -5137,7 +5137,7 @@ PrefabInstance:
     - target: {fileID: 1954582843850377584, guid: 58b5a3e507c7b68449674674e18cab44,
         type: 3}
       propertyPath: forwardFrictionCoeff
-      value: 1
+      value: 0.9
       objectReference: {fileID: 0}
     - target: {fileID: 1954582843850377584, guid: 58b5a3e507c7b68449674674e18cab44,
         type: 3}
@@ -5492,7 +5492,7 @@ PrefabInstance:
     - target: {fileID: 1955409033215586952, guid: 58b5a3e507c7b68449674674e18cab44,
         type: 3}
       propertyPath: forwardFrictionCoeff
-      value: 1
+      value: 0.9
       objectReference: {fileID: 0}
     - target: {fileID: 1955409033215586952, guid: 58b5a3e507c7b68449674674e18cab44,
         type: 3}
@@ -5737,7 +5737,7 @@ PrefabInstance:
     - target: {fileID: 1214198106513114726, guid: 58b5a3e507c7b68449674674e18cab44,
         type: 3}
       propertyPath: maxTorque
-      value: 350
+      value: 11475
       objectReference: {fileID: 0}
     - target: {fileID: 1919970843241741194, guid: 58b5a3e507c7b68449674674e18cab44,
         type: 3}

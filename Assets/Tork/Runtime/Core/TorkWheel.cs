@@ -1,23 +1,8 @@
-﻿/*
- * NOTE (A)
- * A car with wheels of diameter ~55cm usually has axle of diameter 2.2cm. That's a ratio of 25.
-   Could not get values of real cars to verify the 55 and 2.2 cm claim but hat's what I've read somewhere 
-   in a physics problem. This gets me good results. For example: A Civic has 170Nm of torque, at the first 
-   gear that's about 530Nm of torque after transmission with a gear ratio of 3.1. If I set the max toque 
-   in the motor at 530, I get an acceleration that I'd expect when someone in a Civic floors it.
-
-   I'd imagine heavier vehicles have thicker axles, but their wheels are also large, so may be the 
-   ratio would still hold. Or maybe it won't. Please change the value as you prefer.
- */
-
-using System.Net.NetworkInformation;
-using UnityEngine;
-using UnityEngine.Assertions.Must;
+﻿using UnityEngine;
 
 namespace Adrenak.Tork {
     public class TorkWheel : MonoBehaviour {
-        // See at the top of the file for NOTE (A) to read about this.
-        const float engineShaftToWheelRatio = 25;
+        public float mass = 20;
 
         [Tooltip("The radius of the wheel")]
         /// <summary>
@@ -42,7 +27,7 @@ namespace Adrenak.Tork {
         /// <summary>
         /// Damping applied to the wheel. Higher values allow the car to negotiate bumps easily. Recommended: 0.25. Values outside [0, 0.5f] are unnatural
         /// </summary>
-        public float springDamper = .25f;
+        public float springDamper = .7f;
 
         [Tooltip("The rate (m/s) at which the spring relaxes to maximum length when the wheel is not on the ground. Recommended: suspension distance/2")]
         /// <summary>
@@ -212,6 +197,8 @@ namespace Adrenak.Tork {
             return false;
         }
 
+        public float angularSlip;
+
         void CalculateFriction() {
             if (!isGrounded) return;
 
@@ -222,18 +209,38 @@ namespace Adrenak.Tork {
             Vector3 forwardVelocity = Vector3.Project(velocity, forward);
             Vector3 slip = (forwardVelocity + lateralVelocity) / 2;
 
+            // Apply lateral force for traction
             float lateralFriction = Vector3.Project(right, slip).magnitude * suspensionForce.magnitude / 9.8f / Time.fixedDeltaTime * lateralFrictionCoeff;
             rigidbody.AddForceAtPosition(-Vector3.Project(slip, lateralVelocity).normalized * lateralFriction, hit.point);
 
+            // Apply longitudinal force for acceleration/deceleration
+            float maxForwardFriction = suspensionForce.magnitude * forwardFrictionCoeff;
             float motorForce = motorTorque / radius;
-            float maxForwardFriction = motorForce * forwardFrictionCoeff;
-            float appliedForwardFriction = 0;
+            float appliedMotorForce = 0;
             if (motorForce > 0)
-                appliedForwardFriction = Mathf.Clamp(motorForce, 0, maxForwardFriction);
-            else
-                appliedForwardFriction = Mathf.Clamp(motorForce, maxForwardFriction, 0);
+                appliedMotorForce = Mathf.Clamp(motorForce, 0, maxForwardFriction);
+            else if (motorForce < 0)
+                appliedMotorForce = Mathf.Clamp(motorForce, -maxForwardFriction, 0);
+            rigidbody.AddForceAtPosition(forward * appliedMotorForce, hit.point);
 
-            rigidbody.AddForceAtPosition(forward * appliedForwardFriction * engineShaftToWheelRatio, hit.point);
+            // Calculate wheel spin from extra torque
+            float moi = .5f * mass * suspensionForce.magnitude / 9.8f * radius * radius;
+            if (Mathf.Abs(motorForce) > maxForwardFriction) {
+                float wastedMotorForce = Mathf.Abs(motorForce) - Mathf.Abs(appliedMotorForce);
+                float angularAcc = Mathf.Sign(motorForce) * wastedMotorForce * radius / moi;
+                float angularVelIncrement = angularAcc * Time.fixedDeltaTime;
+                angularSlip += angularVelIncrement;
+                angularSlip = Mathf.Clamp(angularSlip, -9000, 9000);
+            }
+            else if (Mathf.Abs(angularSlip) > .01f) {
+                float resistingForce = maxForwardFriction;
+                float resistingTorque = resistingForce * radius;
+                float resistingMoment = .5f * mass * radius * radius;
+                float angularDecc = -Mathf.Sign(Vector3.Dot(velocity, forward)) * resistingTorque / resistingMoment;
+                float angularVelDecrement = angularDecc * Time.fixedDeltaTime;
+                angularSlip += angularVelDecrement;
+                angularSlip = Mathf.Clamp(angularSlip, 0, 9000);
+            }
         }
     }
 }
