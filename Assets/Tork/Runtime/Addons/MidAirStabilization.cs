@@ -15,7 +15,7 @@ namespace Adrenak.Tork{
         }
 
         void Stabilize() {
-            var inAir = m_Wheels.Where(x => x.IsGrounded);
+            var inAir = m_Wheels.Where(x => x.isGrounded);
             if (inAir.Count() == 4) return;
 
             // Try to keep vehicle parallel to the ground while jumping
