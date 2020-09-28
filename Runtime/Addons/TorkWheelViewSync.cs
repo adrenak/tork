@@ -36,7 +36,7 @@ namespace Adrenak.Tork {
 
             view.localPosition = new Vector3(
 				view.localPosition.x + offset,
-				view.localPosition.y - (wheel.suspensionDistance - wheel.CompressionDistance),
+				view.localPosition.y - (wheel.springLength - wheel.compressionDistance),
 				view.localPosition.z
 			);
 		}
@@ -46,8 +46,8 @@ namespace Adrenak.Tork {
             var view = entry.view;
 
             view.localEulerAngles = Vector3.zero;
-			entry.angle += (Time.deltaTime * view.InverseTransformDirection(wheel.Velocity).z) / (2 * Mathf.PI * wheel.radius) * 360;
-			view.Rotate(new Vector3(0, 1, 0), wheel.SteerAngle - view.localEulerAngles.y);
+			entry.angle += (Time.deltaTime * view.InverseTransformDirection(wheel.velocity).z) / (2 * Mathf.PI * wheel.radius) * 360;
+			view.Rotate(new Vector3(0, 1, 0), wheel.steerAngle - view.localEulerAngles.y);
 			view.Rotate(new Vector3(1, 0, 0), entry.angle);
 		}
 	}

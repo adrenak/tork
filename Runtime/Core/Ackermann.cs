@@ -28,24 +28,24 @@ namespace Adrenak.Tork {
         }
 
         public float FrontRightRadius {
-            get { return AxleSeparation / Mathf.Sin(Mathf.Abs(m_FrontRight.SteerAngle)); }
+            get { return AxleSeparation / Mathf.Sin(Mathf.Abs(m_FrontRight.steerAngle)); }
         }
 
         public float FrontLeftRadius {
-            get { return AxleSeparation / Mathf.Sin(Mathf.Abs(m_FrontLeft.SteerAngle)); }
+            get { return AxleSeparation / Mathf.Sin(Mathf.Abs(m_FrontLeft.steerAngle)); }
         }
 
         void Update() {
             var farAngle = AckermannUtils.GetSecondaryAngle(angle, AxleSeparation, AxleWidth);
 
             // The rear wheels are always at 0 steer in Ackermann
-            m_RearLeft.SteerAngle = m_RearRight.SteerAngle = 0;
+            m_RearLeft.steerAngle = m_RearRight.steerAngle = 0;
 
             if (Mathf.Approximately(angle, 0))
-                m_FrontRight.SteerAngle = m_FrontLeft.SteerAngle = 0;
+                m_FrontRight.steerAngle = m_FrontLeft.steerAngle = 0;
             
-            m_FrontLeft.SteerAngle = angle;
-            m_FrontRight.SteerAngle = farAngle;
+            m_FrontLeft.steerAngle = angle;
+            m_FrontRight.steerAngle = farAngle;
         }
 
         public Vector3 GetPivot() {

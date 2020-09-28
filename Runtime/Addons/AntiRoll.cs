@@ -19,15 +19,15 @@ namespace Adrenak.Tork {
 				var wsDown = transform.TransformDirection(Vector3.down);
 				wsDown.Normalize();
 
-				float travelL = Mathf.Clamp01(axle.left.CompressionRatio);
-				float travelR = Mathf.Clamp01(axle.right.CompressionRatio);
+				float travelL = Mathf.Clamp01(axle.left.compressionRatio);
+				float travelR = Mathf.Clamp01(axle.right.compressionRatio);
 				float antiRollForce = (travelL - travelR) * axle.force;
 
-				if (axle.left.IsGrounded)
-					rigidbody.AddForceAtPosition(wsDown * -antiRollForce, axle.left.Hit.point);
+				if (axle.left.isGrounded)
+					rigidbody.AddForceAtPosition(wsDown * -antiRollForce, axle.left.hit.point);
 			
-				if (axle.right.IsGrounded)
-					rigidbody.AddForceAtPosition(wsDown * antiRollForce, axle.right.Hit.point);
+				if (axle.right.isGrounded)
+					rigidbody.AddForceAtPosition(wsDown * antiRollForce, axle.right.hit.point);
 			}
 		}
 	}

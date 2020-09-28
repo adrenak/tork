@@ -30,25 +30,25 @@ namespace Adrenak.Tork {
         /// <summary>
         /// How far the spring expands when it is in air.
         /// </summary>
-        public float suspensionDistance = .25f;
+        public float springLength = .25f;
 
         [Tooltip("The k constant in the Hooke's law for the suspension. High values make the spring hard to compress. Make this larger for heavier vehicles. Recommended: 5x car mass.")]
         /// <summary>
         /// The k constact in the Hooke's law for the suspension. High values make the spring hard to compress. Make this higher for heavier vehicles
         /// </summary>
-        public float stiffness = 5000;
+        public float springStrength = 5000;
 
         [Tooltip("Damping applied to the wheel. Higher values allow the car to negotiate bumps easily. Recommended: 0.25. Values outside [0, 0.5f] are unnatural")]
         /// <summary>
         /// Damping applied to the wheel. Higher values allow the car to negotiate bumps easily. Recommended: 0.25. Values outside [0, 0.5f] are unnatural
         /// </summary>
-        public float dampingFactor = .25f;
+        public float springDamper = .25f;
 
         [Tooltip("The rate (m/s) at which the spring relaxes to maximum length when the wheel is not on the ground. Recommended: suspension distance/2")]
         /// <summary>
         /// The rate (m/s) at which the spring relaxes to maximum length when the wheel is not on the ground.
         /// </summary>
-        public float relaxRate = .125f;
+        public float springRelaxRate = .125f;
 
         [Header("Friction")]
         [Tooltip("Determines the friction force that enables the wheel to exert sideways force while turning." +
@@ -57,7 +57,7 @@ namespace Adrenak.Tork {
         /// <summary>
         /// Determines the friction force that enables the wheel to exert sideways force while turning.
         /// </summary>
-        public float sidewaysGrip = 1;
+        public float lateralFrictionCoeff = 1;
 
         [Tooltip("Determines the friction force that enables the wheel to exert forward force while experiencing torque. " +
         "Values below 1 will cause the wheel to slip (like ice). Values above 1 will cause the wheel to have high force (and thus higher speeds). " +
@@ -65,13 +65,13 @@ namespace Adrenak.Tork {
         /// <summary>
         /// Determines the friction force that enables the wheel to exert forward force while experiencing torque.
         /// </summary>
-        public float forwardGrip = 1;
+        public float forwardFrictionCoeff = 1;
 
         [Tooltip("A constant friction % applied at all times. This allows the car to slow down on its own.")]
         /// <summary>
         /// A constant friction % applied at all times. This allows the car to slow down on its own.
         /// </summary>
-        public float rollingFriction = .1f;
+        public float rollingFrictionCoeff = .1f;
 
         [Header("Raycasting")]
         /// <summary>
@@ -82,37 +82,37 @@ namespace Adrenak.Tork {
         /// <summary>
         /// The velocity of the wheel (at the raycast hit point) in world space
         /// </summary>
-        public Vector3 Velocity { get; private set; }
+        public Vector3 velocity { get; private set; }
 
         /// <summary>
         /// The angle by which the wheel is turning
         /// </summary>
-        public float SteerAngle { get; set; }
+        public float steerAngle { get; set; }
 
         /// <summary>
         /// The torque applied to the wheel for moving in the forward and backward direction
         /// </summary>
-        public float MotorTorque { get; set; }
+        public float motorTorque { get; set; }
 
         /// <summary>
         /// The torque the brake is applying on the wheel
         /// </summary>
-        public float BrakeTorque { get; set; }
+        public float brakeTorque { get; set; }
 
         /// <summary>
         ///Revolutions per minute of the wheel
         /// </summary>
-        public float RPM { get; private set; }
+        public float rpm { get; private set; }
 
         /// <summary>
         /// Whether the wheel is touching the ground
         /// </summary>
-        public bool IsGrounded { get; private set; }
+        public bool isGrounded { get; private set; }
 
         /// <summary>
         /// The distance to which the spring of the wheel is compressed
         /// </summary>
-        public float CompressionDistance { get; private set; }
+        public float compressionDistance { get; private set; }
         float m_PrevCompressionDist;
 
         /// <summary>
@@ -120,23 +120,25 @@ namespace Adrenak.Tork {
         /// 0 when the wheel is entirely uncompressed, 
         /// 1 when the wheel is entirely compressed
         /// </summary>
-        public float CompressionRatio { get; private set; }
+        public float compressionRatio { get; private set; }
 
         /// <summary>
         /// The raycast hit point of the wheel
         /// </summary>
-        public RaycastHit Hit { get { return m_Hit; } }
+        public RaycastHit hit { get { return m_Hit; } }
         RaycastHit m_Hit;
+
+        public float sprungMass => suspensionForce.magnitude / 9.81f;
 
         /// <summary>
         /// The force the spring exerts on the rigidbody
         /// </summary>
-        public Vector3 SuspensionForce { get; private set; }
+        public Vector3 suspensionForce { get; private set; }
 
         Ray m_Ray;
         new Rigidbody rigidbody;
-        public const float k_ExtraRayLegnth = 1;
-        public float RayLength => suspensionDistance + radius + k_ExtraRayLegnth;
+        public const float k_ExtraRayLength = 1;
+        public float RayLength => springLength + radius + k_ExtraRayLength;
 
         void Start() {
             m_Ray = new Ray();
@@ -151,15 +153,15 @@ namespace Adrenak.Tork {
         }
 
         void FixedUpdate() {
-            Velocity = rigidbody.GetPointVelocity(transform.position);
+            velocity = rigidbody.GetPointVelocity(transform.position);
 
             transform.localEulerAngles = new Vector3(
                 transform.localEulerAngles.x,
-                SteerAngle,
+                steerAngle,
                 transform.localEulerAngles.z
             );
             CalculateSuspension();
-            CalculateFriction6();
+            CalculateFriction();
             CalculateRPM();
         }
 
@@ -171,37 +173,37 @@ namespace Adrenak.Tork {
 
         void CalculateSuspension() {
             m_Ray.direction = -transform.up;
-            m_Ray.origin = transform.position + transform.up * k_ExtraRayLegnth;
+            m_Ray.origin = transform.position + transform.up * k_ExtraRayLength;
 
-            IsGrounded = WheelRaycast(RayLength, ref m_Hit);
+            isGrounded = WheelRaycast(RayLength, ref m_Hit);
             // If we did not hit, relax the spring and return
-            if (!IsGrounded) {
-                m_PrevCompressionDist = CompressionDistance;
-                CompressionDistance = CompressionDistance - Time.fixedDeltaTime * relaxRate;
-                CompressionDistance = Mathf.Clamp(CompressionDistance, 0, suspensionDistance);
+            if (!isGrounded) {
+                m_PrevCompressionDist = compressionDistance;
+                compressionDistance = compressionDistance - Time.fixedDeltaTime * springRelaxRate;
+                compressionDistance = Mathf.Clamp(compressionDistance, 0, springLength);
                 return;
             }
 
             var force = 0.0f;
-            CompressionDistance = RayLength - Hit.distance;
-            CompressionDistance = Mathf.Clamp(CompressionDistance, 0, suspensionDistance);
-            CompressionRatio = CompressionDistance / suspensionDistance;
+            compressionDistance = RayLength - hit.distance;
+            compressionDistance = Mathf.Clamp(compressionDistance, 0, springLength);
+            compressionRatio = compressionDistance / springLength;
 
             // Calculate the force from the springs compression using Hooke's Law
-            float compressionForce = stiffness * CompressionRatio;
+            float compressionForce = springStrength * compressionRatio;
             force += compressionForce;
 
             // Calculate the damping force based on compression rate of the spring
-            float rate = (m_PrevCompressionDist - CompressionDistance) / Time.fixedDeltaTime;
-            m_PrevCompressionDist = CompressionDistance;
+            float rate = (m_PrevCompressionDist - compressionDistance) / Time.fixedDeltaTime;
+            m_PrevCompressionDist = compressionDistance;
 
-            float dampingForce = rate * stiffness * dampingFactor;
+            float dampingForce = rate * springStrength * springDamper;
             force -= dampingForce;
 
-            SuspensionForce = transform.up * force;
+            suspensionForce = transform.up * force;
 
             // Apply suspension force
-            rigidbody.AddForceAtPosition(SuspensionForce, (Hit.point));
+            rigidbody.AddForceAtPosition(suspensionForce, (hit.point));
         }
 
         bool WheelRaycast(float maxDistance, ref RaycastHit hit) {
@@ -210,205 +212,28 @@ namespace Adrenak.Tork {
             return false;
         }
 
-        #region APPROACH_1
-        //public float frictionCoeff;
-        //void CalculateFriction1() {
-        //    if (!IsGrounded) return;
-
-        //    // Contact basis (can be different from wheel basis)
-        //    Vector3 right = transform.right;
-        //    Vector3 forward = transform.forward;
-        //    Vector3 Velocity = rigidbody.GetPointVelocity(Hit.point);
-
-        //    var Vf = Vector3.Project(Velocity, forward).magnitude;
-        //    var Vl = Vector3.Project(Velocity, right).magnitude;
-        //    var N = SuspensionForce.magnitude;
-
-        //    var Favail = N * frictionCoeff;
-        //    var Ff = MotorTorque / radius;
-        //    var Fl = Mathf.Abs(Vl) / Mathf.Abs(Vf) * N;
-        //    var Ft = Mathf.Sqrt(Ff * Ff + Fl * Fl);
-
-        //    var Fs = Favail / Ft;
-
-        //    var Flapplied = Fl * Fs;
-        //    var Ffmax = Ff * Fs;
-        //    float Ffa;
-        //    if (Ff > 0)
-        //        Ffa = Mathf.Clamp(Ff, 0, Ffmax);
-        //    else
-        //        Ffa = Mathf.Clamp(Ff, Ffmax, 0);
-
-        //    rigidbody.AddForceAtPosition(-Vector3.Project(Velocity, right).normalized * Flapplied, Hit.point);
-        //    rigidbody.AddForceAtPosition(forward * Ffa * engineShaftToWheelRatio, Hit.point);
-        //}
-        #endregion
-
-        #region APPROACH_2
-        //public float esslip;
-        //public float grip;
-        //public float drift;
-
-        //WheelFrictionCurve curve;
-
-        //void CalculateFriction() {
-        //    if (!IsGrounded) return;
-
-        //    curve.extremumSlip = esslip;
-        //    curve.extremumValue = esslip * grip;
-        //    curve.asymptoteSlip = esslip * 1.5f;
-        //    curve.asymptoteValue = esslip * drift;
-
-        //    // Contact basis (can be different from wheel basis)
-        //    Vector3 right = transform.right;
-        //    Vector3 forward = transform.forward;
-        //    Vector3 Velocity = rigidbody.GetPointVelocity(Hit.point);
-
-        //    var Vf = Vector3.Project(Velocity, forward).magnitude;
-        //    var Vl = Vector3.Project(Velocity, right).magnitude;
-        //    var N = SuspensionForce.magnitude;
-
-        //    var Ff = MotorTorque / radius;
-        //    var Fl = curve.Evaluate(Vl);
-        //    Debug.Log(Vl);
-        //    //Debug.Log(Vl > curve.extremumSlip ? "Slipping" : "Gripping");
-
-        //    var Fs = 1;
-
-        //    var Flapplied = Fl * Fs;
-        //    var Ffmax = Ff * frictionCoeff;
-        //    float Ffa;
-        //    if (Ff > 0)
-        //        Ffa = Mathf.Clamp(Ff, 0, Ffmax);
-        //    else
-        //        Ffa = Mathf.Clamp(Ff, Ffmax, 0);
-
-        //    rigidbody.AddForceAtPosition(-Vector3.Project(Velocity, right).normalized * Flapplied, Hit.point);
-        //    rigidbody.AddForceAtPosition(forward * Ffa * engineShaftToWheelRatio, Hit.point);
-        //}
-        #endregion
-
-        #region APPROACH_3
-        void CalculateFriction3() {
-            if (!IsGrounded) return;
+        void CalculateFriction() {
+            if (!isGrounded) return;
 
             Vector3 right = transform.right;
             Vector3 forward = transform.forward;
-            Vector3 Velocity = rigidbody.GetPointVelocity(Hit.point);
 
-            Vector3 lateralVelocity = Vector3.Project(Velocity, right);
-            Vector3 forwardVelocity = Vector3.Project(Velocity, forward);
+            Vector3 lateralVelocity = Vector3.Project(velocity, right);
+            Vector3 forwardVelocity = Vector3.Project(velocity, forward);
             Vector3 slip = (forwardVelocity + lateralVelocity) / 2;
 
-            float lateralFriction = Vector3.Project(right, slip).magnitude * SuspensionForce.magnitude / 9.8f / Time.fixedDeltaTime * sidewaysGrip;
-            rigidbody.AddForceAtPosition(-Vector3.Project(slip, lateralVelocity).normalized * lateralFriction, Hit.point);
+            float lateralFriction = Vector3.Project(right, slip).magnitude * suspensionForce.magnitude / 9.8f / Time.fixedDeltaTime * lateralFrictionCoeff;
+            rigidbody.AddForceAtPosition(-Vector3.Project(slip, lateralVelocity).normalized * lateralFriction, hit.point);
 
-            float motorForce = MotorTorque / radius;
-            float maxForwardFriction = motorForce * forwardGrip;
+            float motorForce = motorTorque / radius;
+            float maxForwardFriction = motorForce * forwardFrictionCoeff;
             float appliedForwardFriction = 0;
             if (motorForce > 0)
                 appliedForwardFriction = Mathf.Clamp(motorForce, 0, maxForwardFriction);
             else
                 appliedForwardFriction = Mathf.Clamp(motorForce, maxForwardFriction, 0);
 
-            rigidbody.AddForceAtPosition(forward * appliedForwardFriction * engineShaftToWheelRatio, Hit.point);
-        }
-        #endregion
-
-        #region APPROACH_4
-        //public float maxSlip;
-        //public float grip;
-        //public float drift;
-
-        //WheelFrictionCurve curve4;
-        //void CalculateFriction4() {
-        //    if (!IsGrounded) return;
-
-        //    curve4.extremumSlip = maxSlip;
-        //    curve4.extremumValue = grip;
-        //    curve4.asymptoteValue = drift;
-
-        //    Vector3 right = transform.right;
-        //    Vector3 forward = transform.forward;
-        //    Vector3 Velocity = rigidbody.GetPointVelocity(Hit.point);
-
-        //    Vector3 lateralVelocity = Vector3.Project(Velocity, right);
-        //    Vector3 forwardVelocity = Vector3.Project(Velocity, forward);
-        //    Vector3 slip = (forwardVelocity + lateralVelocity) / 2;
-
-        //    sidewaysGrip = curve4.Evaluate2(Vector3.Project(Velocity, right).magnitude);
-
-        //    float lateralFriction = Vector3.Project(right, slip).magnitude * SuspensionForce.magnitude / 9.8f / Time.fixedDeltaTime * sidewaysGrip;
-        //    rigidbody.AddForceAtPosition(-Vector3.Project(slip, lateralVelocity).normalized * lateralFriction, Hit.point);
-
-        //    float motorForce = MotorTorque / radius;
-        //    float maxForwardFriction = motorForce * forwardGrip;
-        //    float appliedForwardFriction = 0;
-        //    if (motorForce > 0)
-        //        appliedForwardFriction = Mathf.Clamp(motorForce, 0, maxForwardFriction);
-        //    else
-        //        appliedForwardFriction = Mathf.Clamp(motorForce, maxForwardFriction, 0);
-
-        //    rigidbody.AddForceAtPosition(forward * appliedForwardFriction * engineShaftToWheelRatio, Hit.point);
-        //}
-        #endregion
-
-        #region APPROACH5
-        //public AnimationCurve curve5 = AnimationCurve.Constant(0, 100, .8f);
-        //void CalculateFriction5() {
-        //    if (!IsGrounded) return;
-
-        //    Vector3 right = transform.right;
-        //    Vector3 forward = transform.forward;
-        //    Vector3 Velocity = rigidbody.GetPointVelocity(Hit.point);
-
-        //    Vector3 lateralVelocity = Vector3.Project(Velocity, right);
-        //    Vector3 forwardVelocity = Vector3.Project(Velocity, forward);
-        //    Vector3 slip = (forwardVelocity + lateralVelocity) / 2;
-
-        //    sidewaysGrip = curve5.Evaluate(Vector3.Project(Velocity, right).magnitude);
-
-        //    float lateralFriction = Vector3.Project(right, slip).magnitude * SuspensionForce.magnitude / 9.8f / Time.fixedDeltaTime * sidewaysGrip;
-        //    rigidbody.AddForceAtPosition(-Vector3.Project(slip, lateralVelocity).normalized * lateralFriction, Hit.point);
-
-        //    float motorForce = MotorTorque / radius;
-        //    float maxForwardFriction = motorForce * forwardGrip;
-        //    float appliedForwardFriction = 0;
-        //    if (motorForce > 0)
-        //        appliedForwardFriction = Mathf.Clamp(motorForce, 0, maxForwardFriction);
-        //    else
-        //        appliedForwardFriction = Mathf.Clamp(motorForce, maxForwardFriction, 0);
-
-        //    rigidbody.AddForceAtPosition(forward * appliedForwardFriction * engineShaftToWheelRatio, Hit.point);
-        //}
-        #endregion
-
-        public SlipFrictionCurve curve6;
-        void CalculateFriction6() {
-            if (!IsGrounded) return;
-
-            Vector3 right = transform.right;
-            Vector3 forward = transform.forward;
-            Vector3 Velocity = rigidbody.GetPointVelocity(Hit.point);
-
-            Vector3 lateralVelocity = Vector3.Project(Velocity, right);
-            Vector3 forwardVelocity = Vector3.Project(Velocity, forward);
-            Vector3 slip = (forwardVelocity + lateralVelocity) / 2;
-
-            sidewaysGrip = curve6.Evaluate(Vector3.Project(Velocity, right).magnitude);
-
-            float lateralFriction = Vector3.Project(right, slip).magnitude * SuspensionForce.magnitude / 9.8f / Time.fixedDeltaTime * sidewaysGrip;
-            rigidbody.AddForceAtPosition(-Vector3.Project(slip, lateralVelocity).normalized * lateralFriction, Hit.point);
-
-            float motorForce = MotorTorque / radius;
-            float maxForwardFriction = motorForce * forwardGrip;
-            float appliedForwardFriction = 0;
-            if (motorForce > 0)
-                appliedForwardFriction = Mathf.Clamp(motorForce, 0, maxForwardFriction);
-            else
-                appliedForwardFriction = Mathf.Clamp(motorForce, maxForwardFriction, 0);
-
-            rigidbody.AddForceAtPosition(forward * appliedForwardFriction * engineShaftToWheelRatio, Hit.point);
+            rigidbody.AddForceAtPosition(forward * appliedForwardFriction * engineShaftToWheelRatio, hit.point);
         }
     }
 }
