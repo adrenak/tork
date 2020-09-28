@@ -39,16 +39,16 @@ namespace Adrenak.Tork {
             rs = radii[3] / total;
 
             if (ackermann.angle > 0) {
-                //ackermann.FrontRightWheel.MotorTorque = value * maxTorque * fp;
-                //ackermann.FrontLeftWheel.MotorTorque = value * maxTorque * fs;
-                ackermann.RearRightWheel.MotorTorque = value * maxTorque * .5f; //rp;
-                ackermann.RearLeftWheel.MotorTorque = value * maxTorque * .5f; //rp;
+                ackermann.FrontRightWheel.MotorTorque = value * maxTorque * fp;
+                ackermann.FrontLeftWheel.MotorTorque = value * maxTorque * fs;
+                ackermann.RearRightWheel.MotorTorque = value * maxTorque * rp;
+                ackermann.RearLeftWheel.MotorTorque = value * maxTorque * rs;
             }
             else {
-                //ackermann.FrontLeftWheel.MotorTorque = value * maxTorque * fp;
-                //ackermann.FrontRightWheel.MotorTorque = value * maxTorque * fs;
-                ackermann.RearLeftWheel.MotorTorque = value * maxTorque * .5f; //rp;
-                ackermann.RearRightWheel.MotorTorque = value * maxTorque * .5f; //rp;
+                ackermann.FrontLeftWheel.MotorTorque = value * maxTorque * fp;
+                ackermann.FrontRightWheel.MotorTorque = value * maxTorque * fs;
+                ackermann.RearLeftWheel.MotorTorque = value * maxTorque * rp;
+                ackermann.RearRightWheel.MotorTorque = value * maxTorque * rs;
             }
         }
 
