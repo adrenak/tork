@@ -23,5 +23,12 @@ namespace Adrenak.Tork {
                 //return curve.asymptoteValue;
                 return ((slip - curve.asymptoteSlip) * (curve.extremumValue - curve.asymptoteValue) / (curve.extremumSlip - curve.asymptoteSlip)) + curve.asymptoteValue;
         }
+
+        public static float Evaluate2(this WheelFrictionCurve curve, float slip) {
+            if (slip < curve.extremumSlip)
+                return curve.extremumValue;
+            else
+                return curve.asymptoteValue;
+        }
     }
 }
