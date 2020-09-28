@@ -162,7 +162,7 @@ namespace Adrenak.Tork {
                 transform.localEulerAngles.z
             );
             CalculateSuspension();
-            CalculateFriction();
+            CalculateFriction3();
             CalculateRPM();
         }
 
@@ -227,7 +227,7 @@ namespace Adrenak.Tork {
 
             var Favail = N * frictionCoeff;
             var Ff = MotorTorque / radius;
-            var Fl = Vl / Vf * N * frictionCoeff;
+            var Fl = Mathf.Abs(Vl) / Mathf.Abs(Vf) * N;
             var Ft = Mathf.Sqrt(Ff * Ff + Fl * Fl);
             
             var Fs = Favail / Ft;
@@ -243,7 +243,7 @@ namespace Adrenak.Tork {
             rigidbody.AddForceAtPosition(-Vector3.Project(Velocity, right).normalized * Flapplied, Hit.point);
             rigidbody.AddForceAtPosition(forward * Ffa * engineShaftToWheelRatio, Hit.point);
         }
-
+        #region APPROACH_2
         public float esslip;
         public float grip;
         public float drift;
@@ -284,6 +284,32 @@ namespace Adrenak.Tork {
 
             rigidbody.AddForceAtPosition(-Vector3.Project(Velocity, right).normalized * Flapplied, Hit.point);
             rigidbody.AddForceAtPosition(forward * Ffa * engineShaftToWheelRatio, Hit.point);
+        }
+        #endregion
+
+        void CalculateFriction3() {
+            if (!IsGrounded) return;
+
+            Vector3 right = transform.right;
+            Vector3 forward = transform.forward;
+            Vector3 Velocity = rigidbody.GetPointVelocity(Hit.point);
+
+            Vector3 lateralVelocity = Vector3.Project(Velocity, right);
+            Vector3 forwardVelocity = Vector3.Project(Velocity, forward);
+            Vector3 slip = (forwardVelocity + lateralVelocity) / 2;
+
+            float lateralFriction = Vector3.Project(right, slip).magnitude * SuspensionForce.magnitude / 9.8f / Time.fixedDeltaTime * sidewaysGrip;
+            rigidbody.AddForceAtPosition(-Vector3.Project(slip, lateralVelocity).normalized * lateralFriction, Hit.point);
+
+            float motorForce = MotorTorque / radius;
+            float maxForwardFriction = motorForce * forwardGrip;
+            float appliedForwardFriction = 0;
+            if (motorForce > 0)
+                appliedForwardFriction = Mathf.Clamp(motorForce, 0, maxForwardFriction);
+            else
+                appliedForwardFriction = Mathf.Clamp(motorForce, maxForwardFriction, 0);
+
+            rigidbody.AddForceAtPosition(forward * appliedForwardFriction * engineShaftToWheelRatio, Hit.point);
         }
     }
 }
