@@ -992,7 +992,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curve:
     maxCoeff: 0.7
-    minCoeff: 0.5
+    minCoeff: 0.4
     softness: 15
     criticalSlip: 15
 --- !u!1 &448470856
@@ -1288,7 +1288,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curve:
     maxCoeff: 0.7
-    minCoeff: 0.5
+    minCoeff: 0.4
     softness: 15
     criticalSlip: 15
 --- !u!1 &712748576
@@ -2173,7 +2173,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curve:
     maxCoeff: 0.7
-    minCoeff: 0.5
+    minCoeff: 0.4
     softness: 10
     criticalSlip: 15
 --- !u!1 &968674519
@@ -2919,7 +2919,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curve:
     maxCoeff: 0.7
-    minCoeff: 0.5
+    minCoeff: 0.4
     softness: 10
     criticalSlip: 15
 --- !u!1 &1279867582
@@ -4427,12 +4427,12 @@ PrefabInstance:
     - target: {fileID: 1954840075906366550, guid: 58b5a3e507c7b68449674674e18cab44,
         type: 3}
       propertyPath: forwardFrictionCoeff
-      value: 0.9
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1954840075906366550, guid: 58b5a3e507c7b68449674674e18cab44,
         type: 3}
       propertyPath: lateralFrictionCoeff
-      value: 0.75
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1954840075906366550, guid: 58b5a3e507c7b68449674674e18cab44,
         type: 3}
@@ -4627,7 +4627,7 @@ PrefabInstance:
     - target: {fileID: 1954840075906366550, guid: 58b5a3e507c7b68449674674e18cab44,
         type: 3}
       propertyPath: radius
-      value: 0.3
+      value: 0.325
       objectReference: {fileID: 0}
     - target: {fileID: 1954840075906366550, guid: 58b5a3e507c7b68449674674e18cab44,
         type: 3}
@@ -4637,7 +4637,7 @@ PrefabInstance:
     - target: {fileID: 1954840075906366550, guid: 58b5a3e507c7b68449674674e18cab44,
         type: 3}
       propertyPath: springDamper
-      value: 0.75
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 1955367046092286648, guid: 58b5a3e507c7b68449674674e18cab44,
         type: 3}
@@ -4782,12 +4782,12 @@ PrefabInstance:
     - target: {fileID: 1955367046092286648, guid: 58b5a3e507c7b68449674674e18cab44,
         type: 3}
       propertyPath: forwardFrictionCoeff
-      value: 0.9
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1955367046092286648, guid: 58b5a3e507c7b68449674674e18cab44,
         type: 3}
       propertyPath: lateralFrictionCoeff
-      value: 0.75
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1955367046092286648, guid: 58b5a3e507c7b68449674674e18cab44,
         type: 3}
@@ -4982,7 +4982,7 @@ PrefabInstance:
     - target: {fileID: 1955367046092286648, guid: 58b5a3e507c7b68449674674e18cab44,
         type: 3}
       propertyPath: radius
-      value: 0.3
+      value: 0.325
       objectReference: {fileID: 0}
     - target: {fileID: 1955367046092286648, guid: 58b5a3e507c7b68449674674e18cab44,
         type: 3}
@@ -4992,7 +4992,7 @@ PrefabInstance:
     - target: {fileID: 1955367046092286648, guid: 58b5a3e507c7b68449674674e18cab44,
         type: 3}
       propertyPath: springDamper
-      value: 0.75
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 1954582843850377584, guid: 58b5a3e507c7b68449674674e18cab44,
         type: 3}
@@ -5137,12 +5137,12 @@ PrefabInstance:
     - target: {fileID: 1954582843850377584, guid: 58b5a3e507c7b68449674674e18cab44,
         type: 3}
       propertyPath: forwardFrictionCoeff
-      value: 0.9
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1954582843850377584, guid: 58b5a3e507c7b68449674674e18cab44,
         type: 3}
       propertyPath: lateralFrictionCoeff
-      value: 0.75
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1954582843850377584, guid: 58b5a3e507c7b68449674674e18cab44,
         type: 3}
@@ -5337,7 +5337,7 @@ PrefabInstance:
     - target: {fileID: 1954582843850377584, guid: 58b5a3e507c7b68449674674e18cab44,
         type: 3}
       propertyPath: radius
-      value: 0.3
+      value: 0.325
       objectReference: {fileID: 0}
     - target: {fileID: 1954582843850377584, guid: 58b5a3e507c7b68449674674e18cab44,
         type: 3}
@@ -5347,7 +5347,7 @@ PrefabInstance:
     - target: {fileID: 1954582843850377584, guid: 58b5a3e507c7b68449674674e18cab44,
         type: 3}
       propertyPath: springDamper
-      value: 0.75
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 1955409033215586952, guid: 58b5a3e507c7b68449674674e18cab44,
         type: 3}
@@ -5492,12 +5492,12 @@ PrefabInstance:
     - target: {fileID: 1955409033215586952, guid: 58b5a3e507c7b68449674674e18cab44,
         type: 3}
       propertyPath: forwardFrictionCoeff
-      value: 0.9
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1955409033215586952, guid: 58b5a3e507c7b68449674674e18cab44,
         type: 3}
       propertyPath: lateralFrictionCoeff
-      value: 0.75
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1955409033215586952, guid: 58b5a3e507c7b68449674674e18cab44,
         type: 3}
@@ -5692,7 +5692,7 @@ PrefabInstance:
     - target: {fileID: 1955409033215586952, guid: 58b5a3e507c7b68449674674e18cab44,
         type: 3}
       propertyPath: radius
-      value: 0.3
+      value: 0.325
       objectReference: {fileID: 0}
     - target: {fileID: 1955409033215586952, guid: 58b5a3e507c7b68449674674e18cab44,
         type: 3}
@@ -5702,7 +5702,7 @@ PrefabInstance:
     - target: {fileID: 1955409033215586952, guid: 58b5a3e507c7b68449674674e18cab44,
         type: 3}
       propertyPath: springDamper
-      value: 0.75
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 1214198106691927564, guid: 58b5a3e507c7b68449674674e18cab44,
         type: 3}
@@ -5758,6 +5758,14 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalPosition.y
       value: -0.082999945
+      objectReference: {fileID: 0}
+    - target: {fileID: 4693385222541790, guid: 58b5a3e507c7b68449674674e18cab44, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.09
+      objectReference: {fileID: 0}
+    - target: {fileID: 4693385222541790, guid: 58b5a3e507c7b68449674674e18cab44, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 58b5a3e507c7b68449674674e18cab44, type: 3}
