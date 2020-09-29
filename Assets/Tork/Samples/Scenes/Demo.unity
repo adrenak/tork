@@ -991,7 +991,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curve:
-    maxCoeff: 0.7
+    maxCoeff: 0.85
     minCoeff: 0.5
     softness: 15
     criticalSlip: 15
@@ -1287,7 +1287,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curve:
-    maxCoeff: 0.7
+    maxCoeff: 0.85
     minCoeff: 0.5
     softness: 15
     criticalSlip: 15
@@ -2172,7 +2172,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curve:
-    maxCoeff: 0.7
+    maxCoeff: 0.85
     minCoeff: 0.5
     softness: 10
     criticalSlip: 15
@@ -2918,7 +2918,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curve:
-    maxCoeff: 0.7
+    maxCoeff: 0.85
     minCoeff: 0.5
     softness: 10
     criticalSlip: 15
@@ -4994,6 +4994,11 @@ PrefabInstance:
       propertyPath: springDamper
       value: 0.7
       objectReference: {fileID: 0}
+    - target: {fileID: 1955367046092286648, guid: 58b5a3e507c7b68449674674e18cab44,
+        type: 3}
+      propertyPath: debug
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1954582843850377584, guid: 58b5a3e507c7b68449674674e18cab44,
         type: 3}
       propertyPath: curve2.m_Curve.Array.size
@@ -5951,3 +5956,45 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2093488895}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &2130408359 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1214198106513114724, guid: 58b5a3e507c7b68449674674e18cab44,
+    type: 3}
+  m_PrefabInstance: {fileID: 2072883566}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2130408360
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2130408359}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7c3b0533fc0b7446b79249a5b83d4d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  motor: {fileID: 2130408361}
+  ratios:
+  - 3.6
+  - 2.1
+  - 1.35
+  - 1
+  - 0.83
+  - 0.7
+  current: 0
+  finalDrive: 4.1
+  axleRatio: 5
+  torque: 170
+--- !u!114 &2130408361 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1214198106513114726, guid: 58b5a3e507c7b68449674674e18cab44,
+    type: 3}
+  m_PrefabInstance: {fileID: 2072883566}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2130408359}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a28b5a52112c97342bb0ca5d468e15b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
