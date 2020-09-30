@@ -3,6 +3,11 @@ using UnityEngine;
 
 namespace Adrenak.Tork {
     public class TorkWheel : MonoBehaviour {
+        #region FIELDS
+        [Tooltip("Mass of the wheel")]
+        /// <summary>
+        /// Mass of the wheel
+        /// </summary>
         public float mass = 20;
 
         [Tooltip("The radius of the wheel")]
@@ -28,7 +33,7 @@ namespace Adrenak.Tork {
         /// <summary>
         /// Damping applied to the wheel. Higher values allow the car to negotiate bumps easily. Recommended: 0.25. Values outside [0, 0.5f] are unnatural
         /// </summary>
-        public float springDamper = .7f;
+        public float springDampingFactor = .7f;
 
         [Tooltip("The rate (m/s) at which the spring relaxes to maximum length when the wheel is not on the ground. Recommended: suspension distance/2")]
         /// <summary>
@@ -51,7 +56,7 @@ namespace Adrenak.Tork {
         /// <summary>
         /// Determines the friction force that enables the wheel to exert forward force while experiencing torque.
         /// </summary>
-        public float forwardFrictionCoeff = 1;
+        public float longitudinalFrictionCoeff = 1;
 
         [Tooltip("A constant friction % applied at all times. This allows the car to slow down on its own.")]
         /// <summary>
@@ -70,23 +75,26 @@ namespace Adrenak.Tork {
         /// </summary>
         public Vector3 velocity { get; private set; }
 
+        [Tooltip("The angle by which the wheel is turning")]
         /// <summary>
         /// The angle by which the wheel is turning
         /// </summary>
-        public float steerAngle { get; set; }
+        public float steerAngle;
 
+        [Tooltip("The torque applied to the wheel for moving in the forward and backward direction")]
         /// <summary>
         /// The torque applied to the wheel for moving in the forward and backward direction
         /// </summary>
-        public float motorTorque { get; set; }
+        public float motorTorque;
 
+        [Tooltip("The torque the brake is applying on the wheel")]
         /// <summary>
         /// The torque the brake is applying on the wheel
         /// </summary>
-        public float brakeTorque { get; set; }
+        public float brakeTorque;
 
         /// <summary>
-        ///Revolutions per minute of the wheel
+        /// Revolutions per minute of the wheel
         /// </summary>
         public float rpm { get; private set; }
 
@@ -125,6 +133,7 @@ namespace Adrenak.Tork {
         new Rigidbody rigidbody;
         public const float k_ExtraRayLength = 1;
         public float RayLength => springLength + radius + k_ExtraRayLength;
+        #endregion
 
         void Start() {
             m_Ray = new Ray();
@@ -148,15 +157,9 @@ namespace Adrenak.Tork {
             );
             CalculateSuspension();
             CalculateFriction();
-            CalculateRPM();
         }
 
-        void CalculateRPM() {
-            float metersPerMinute = rigidbody.velocity.magnitude * 60;
-            float wheelCircumference = 2 * Mathf.PI * radius;
-            //RPM = metersPerMinute / wheelCircumference;
-        }
-
+        #region SUSPENSION
         void CalculateSuspension() {
             m_Ray.direction = -transform.up;
             m_Ray.origin = transform.position + transform.up * k_ExtraRayLength;
@@ -183,7 +186,7 @@ namespace Adrenak.Tork {
             float rate = (m_PrevCompressionDist - compressionDistance) / Time.fixedDeltaTime;
             m_PrevCompressionDist = compressionDistance;
 
-            float dampingForce = rate * springStrength * springDamper;
+            float dampingForce = rate * springStrength * springDampingFactor;
             force -= dampingForce;
 
             suspensionForce = transform.up * force;
@@ -197,59 +200,55 @@ namespace Adrenak.Tork {
                 return true;
             return false;
         }
+        #endregion
 
+        #region FRICTION
         public float angularSlip;
-        public bool debug;
+        float MomentOfIntertia => .5f * mass * radius * radius;
+        float MaxLongitudinalFriction => suspensionForce.magnitude * longitudinalFrictionCoeff;
+        float MotorForce => motorTorque / radius;
+        float ApplicableMotorForce {
+            get {
+                if (Mathf.Abs(MotorForce) == 0) return 0;
+                if (Mathf.Abs(MotorForce) < MaxLongitudinalFriction)
+                    return MotorForce;
+                else
+                    return MaxLongitudinalFriction * Mathf.Sign(MotorForce);
+            }
+        }
+        float UnusedMotorForce => Mathf.Abs(MotorForce) - Mathf.Abs(ApplicableMotorForce);
+
         void CalculateFriction() {
             if (!isGrounded) return;
 
             Vector3 right = transform.right;
             Vector3 forward = transform.forward;
 
-            Vector3 lateralVelocity = Vector3.Project(velocity, right);
-            Vector3 forwardVelocity = Vector3.Project(velocity, forward);
-            Vector3 slip = (forwardVelocity + lateralVelocity) / 2;
+            Vector3 longVelocity = Vector3.Project(velocity, right);
+            Vector3 latVelocity = Vector3.Project(velocity, forward);
+            Vector3 planarVelocity = (latVelocity + longVelocity) / 2;
 
-            // Apply lateral force for traction
-            float lateralFriction = Vector3.Project(right, slip).magnitude * suspensionForce.magnitude / 9.8f / Time.fixedDeltaTime * lateralFrictionCoeff;
-            rigidbody.AddForceAtPosition(-Vector3.Project(slip, lateralVelocity).normalized * lateralFriction, hit.point);
-
-            normalForce = suspensionForce.magnitude;
-            motorF = motorTorque / radius;
+            float lateralFriction = Vector3.Project(right, planarVelocity).magnitude * suspensionForce.magnitude / 9.8f / Time.fixedDeltaTime * lateralFrictionCoeff;
+            rigidbody.AddForceAtPosition(-Vector3.Project(planarVelocity, longVelocity).normalized * lateralFriction, hit.point);
 
             if (Mathf.Abs(angularSlip) == 0.0f && Mathf.Abs(motorTorque) == 0.0f)
-                NoSlipNoMotor();
+                RollingFriction();
             else if (Mathf.Abs(angularSlip) == 0.0f && Mathf.Abs(motorTorque) > 0.0f)
-                NoSlipYesMotor();
+                TorqueWithoutSlip();
             else if (Mathf.Abs(angularSlip) > 0.0f && Mathf.Abs(motorTorque) > 0.0f)
-                YesSlipYesMotor();
+                TorqueWithSlip();
             else if (Mathf.Abs(angularSlip) > 0.0f && Mathf.Abs(motorTorque) == 0.0f)
-                YesSlipNoMotor();
+                SlipWithoutTorque();
         }
 
-        public float normalForce;
-        public float motorF;
-        float moi => .5f * mass * radius * radius;
-        float maxForwardFriction => suspensionForce.magnitude * forwardFrictionCoeff;
-        float motorForce => motorTorque / radius;
-        float appliedMotorForce {
-            get {
-                if (Mathf.Abs(motorForce) == 0) return 0;
-                if (Mathf.Abs(motorForce) < maxForwardFriction)
-                    return motorForce;
-                else
-                    return maxForwardFriction * Mathf.Sign(motorForce);
-            }
-        }
-        float wastedMotorForce => Mathf.Abs(motorForce) - Mathf.Abs(appliedMotorForce);
-
-        void UpdateSlip(float torque, bool dontChangeDirection = false) {
-            float acc = torque / moi;
+        void UpdateSlip(float torque, bool dontChangeDirection = true) {
+            bool slipWasZero = angularSlip == 0.0f;
+            float acc = torque / MomentOfIntertia;
             float delta = acc * Time.deltaTime;
             angularSlip += delta;
             angularSlip = Mathf.Clamp(angularSlip, -9000, 9000);
 
-            if (dontChangeDirection) {
+            if (dontChangeDirection && !slipWasZero) {
                 if (Mathf.Sign(delta) == -1)
                     angularSlip = Mathf.Clamp(angularSlip, 0, 9000);
                 else if (Mathf.Sign(delta) == 1)
@@ -257,43 +256,50 @@ namespace Adrenak.Tork {
             }
         }
 
-        void NoSlipNoMotor() {
-            // Can happen when the wheel is stationery or rolling
-            // We only care about the rolling situation
+        void RollingFriction() {
             Vector3 forward = transform.forward;
             float forwardSpeed = Vector3.Dot(velocity, forward);
-            float rollingFriction = suspensionForce.magnitude * rollingFrictionCoeff;
 
-            rigidbody.AddForceAtPosition(-Mathf.Sign(forwardSpeed) * forward * rollingFriction, hit.point);
+            Vector3 rollingFrictionDirection = -Mathf.Sign(forwardSpeed) * forward;
+            float rollingFrictionMag = suspensionForce.magnitude * rollingFrictionCoeff;
+
+            rigidbody.AddForceAtPosition(rollingFrictionDirection * rollingFrictionMag, hit.point);
         }
 
-        void NoSlipYesMotor() {
-            // Happens when we are gently accelerating while stationary or rolling
-            // We only care about the rolling situation           
-            rigidbody.AddForceAtPosition(transform.forward * appliedMotorForce, hit.point);
+        void TorqueWithoutSlip() {
+            rigidbody.AddForceAtPosition(transform.forward * ApplicableMotorForce, hit.point);
 
-            if (wastedMotorForce > 0f) 
-                UpdateSlip(Mathf.Sign(motorForce) * wastedMotorForce * radius);
+            if (UnusedMotorForce > 0f)
+                UpdateSlip(Mathf.Sign(MotorForce) * UnusedMotorForce * radius);
         }
 
-        void YesSlipYesMotor() {
+        void TorqueWithSlip() {
             Vector3 forward = transform.forward;
 
-            if (Mathf.Sign(angularSlip) != Mathf.Sign(motorTorque)) 
-                UpdateSlip(motorTorque);
-            else {
-                rigidbody.AddForceAtPosition(forward * appliedMotorForce, hit.point);
+            // If the torque applied is in the same direction as the slip
+            // we apply application motor force in driving the vehicle in
+            // the direction the motor torque wants. 
+            // If there is unused motor force, we spin the wheel even more
+            // If not, we slow down the spinning with the maximum friction
+            // available in the longitudinal direction
+            if (Mathf.Sign(angularSlip) == Mathf.Sign(motorTorque)) {
+                rigidbody.AddForceAtPosition(forward * ApplicableMotorForce, hit.point);
 
-                if (wastedMotorForce > 0f) 
-                    UpdateSlip(Mathf.Sign(motorForce) * wastedMotorForce * radius);
+                if (UnusedMotorForce > 0f)
+                    UpdateSlip(Mathf.Sign(MotorForce) * UnusedMotorForce * radius);
                 else
-                    UpdateSlip(maxForwardFriction, true);
+                    UpdateSlip(MaxLongitudinalFriction, true);
+            }
+            // If the slip and motor torque are in opposite directions but the
+            // motor torque applied is opposite, all the torque is spent on
+            // bringing the slip to zero
+            else {
+                UpdateSlip(motorTorque, true);
             }
         }
 
-        void YesSlipNoMotor() {
-            float antiSlipTorque = suspensionForce.magnitude * forwardFrictionCoeff;
-            UpdateSlip(antiSlipTorque, true);
-        }
+        void SlipWithoutTorque() =>
+            UpdateSlip(suspensionForce.magnitude * longitudinalFrictionCoeff, true);
+        #endregion
     }
 }

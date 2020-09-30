@@ -995,6 +995,23 @@ MonoBehaviour:
     minCoeff: 0.5
     softness: 15
     criticalSlip: 15
+--- !u!114 &403280024
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 403280020}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cadc98793fbf8f4a85f5d3d9b36156a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  curve:
+    maxCoeff: 0.9
+    minCoeff: 0.6
+    softness: 1.3
+    criticalSlip: 0.6
 --- !u!1 &448470856
 GameObject:
   m_ObjectHideFlags: 0
@@ -1291,6 +1308,23 @@ MonoBehaviour:
     minCoeff: 0.5
     softness: 15
     criticalSlip: 15
+--- !u!114 &663130227
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 663130223}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cadc98793fbf8f4a85f5d3d9b36156a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  curve:
+    maxCoeff: 0.9
+    minCoeff: 0.6
+    softness: 1.3
+    criticalSlip: 0.6
 --- !u!1 &712748576
 GameObject:
   m_ObjectHideFlags: 0
@@ -2176,6 +2210,23 @@ MonoBehaviour:
     minCoeff: 0.5
     softness: 10
     criticalSlip: 15
+--- !u!114 &950335448
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 950335444}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cadc98793fbf8f4a85f5d3d9b36156a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  curve:
+    maxCoeff: 0.9
+    minCoeff: 0.6
+    softness: 1.3
+    criticalSlip: 0.6
 --- !u!1 &968674519
 GameObject:
   m_ObjectHideFlags: 0
@@ -2922,6 +2973,23 @@ MonoBehaviour:
     minCoeff: 0.5
     softness: 10
     criticalSlip: 15
+--- !u!114 &1258139723
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1258139719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cadc98793fbf8f4a85f5d3d9b36156a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  curve:
+    maxCoeff: 0.9
+    minCoeff: 0.6
+    softness: 20
+    criticalSlip: 100
 --- !u!1 &1279867582
 GameObject:
   m_ObjectHideFlags: 0
@@ -5353,6 +5421,56 @@ PrefabInstance:
         type: 3}
       propertyPath: springDamper
       value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1954582843850377584, guid: 58b5a3e507c7b68449674674e18cab44,
+        type: 3}
+      propertyPath: springLength
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 1954582843850377584, guid: 58b5a3e507c7b68449674674e18cab44,
+        type: 3}
+      propertyPath: springDampingFactor
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1954582843850377584, guid: 58b5a3e507c7b68449674674e18cab44,
+        type: 3}
+      propertyPath: springRelaxRate
+      value: 0.125
+      objectReference: {fileID: 0}
+    - target: {fileID: 1954582843850377584, guid: 58b5a3e507c7b68449674674e18cab44,
+        type: 3}
+      propertyPath: rollingFrictionCoeff
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1954582843850377584, guid: 58b5a3e507c7b68449674674e18cab44,
+        type: 3}
+      propertyPath: steerAngle
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1954582843850377584, guid: 58b5a3e507c7b68449674674e18cab44,
+        type: 3}
+      propertyPath: motorTorque
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1954582843850377584, guid: 58b5a3e507c7b68449674674e18cab44,
+        type: 3}
+      propertyPath: brakeTorque
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1954582843850377584, guid: 58b5a3e507c7b68449674674e18cab44,
+        type: 3}
+      propertyPath: angularSlip
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1954582843850377584, guid: 58b5a3e507c7b68449674674e18cab44,
+        type: 3}
+      propertyPath: mass
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 1954582843850377584, guid: 58b5a3e507c7b68449674674e18cab44,
+        type: 3}
+      propertyPath: m_RaycastLayers.m_Bits
+      value: 51
       objectReference: {fileID: 0}
     - target: {fileID: 1955409033215586952, guid: 58b5a3e507c7b68449674674e18cab44,
         type: 3}
