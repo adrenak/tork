@@ -1,3 +1,10 @@
+# [2.4.0](https://github.com/adrenak/tork/compare/v2.3.0...v2.4.0) (2020-09-30)
+
+
+### Features
+
+* Support tiled wheels (like BMW?) ([58e944d](https://github.com/adrenak/tork/commit/58e944d40d708d8620a9289ebb94a99f27c74169))
+
 # [2.3.0](https://github.com/adrenak/tork/compare/v2.2.0...v2.3.0) (2020-05-02)
 
 
