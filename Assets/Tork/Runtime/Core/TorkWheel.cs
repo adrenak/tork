@@ -157,6 +157,7 @@ namespace Adrenak.Tork {
             );
             CalculateSuspension();
             CalculateFriction();
+            //CalculateFriction();
         }
 
         #region SUSPENSION
@@ -203,7 +204,7 @@ namespace Adrenak.Tork {
         #endregion
 
         #region FRICTION
-        public float angularSlip;
+        public float angularSlip = 0.0f;
         float MomentOfIntertia => .5f * mass * radius * radius;
         float TotalFrictionForce => suspensionForce.magnitude * longitudinalFrictionCoeff;
         float MotorForce => motorTorque / radius;
@@ -216,38 +217,57 @@ namespace Adrenak.Tork {
                     return TotalFrictionForce * Mathf.Sign(MotorForce);
             }
         }
-        float UnusedMotorForce => Mathf.Abs(MotorForce) - Mathf.Abs(ApplicableMotorForce);
 
         void CalculateFriction() {
+            float maxFriction = suspensionForce.magnitude * longitudinalFrictionCoeff;
+            float motorForce = motorTorque / radius;
+            float usedMotorForce;
+            if (Mathf.Abs(motorForce) < maxFriction)
+                usedMotorForce = motorForce;
+            else
+                usedMotorForce = Mathf.Sign(motorForce) * maxFriction;
+
+            float unusedMotorForce = Mathf.Sign(motorForce) * (Mathf.Abs(motorForce) - Mathf.Abs(usedMotorForce));
+            float unusedFriction = maxFriction - Mathf.Abs(usedMotorForce);
+
+            // Increase slip due to unused motor force
+            if (Mathf.Sign(motorForce) == Mathf.Sign(angularSlip))
+                Slip(unusedMotorForce);
+            // If MotorForce is acting against slip,
+            // use the motor slip for reversing the slip
+            else if (Mathf.Sign(motorForce) != Mathf.Sign(angularSlip))
+                Slip(-Mathf.Sign(motorForce) * motorForce);
+
+            // Decrease slip due to unused normalForce
+            if(angularSlip != 0.0f)
+                Slip(-Mathf.Sign(angularSlip) * unusedFriction);
+
+            // Apply rolling friction at all times
+            float longSpeed = transform.InverseTransformDirection(velocity).y;
+            float rollingFrictionForce = suspensionForce.magnitude * rollingFrictionCoeff;
+            Longitudinal(Mathf.Sign(longSpeed) * rollingFrictionForce);
+
+            // Apply driving friction
+            Longitudinal(usedMotorForce);
+
             Vector3 right = transform.right;
             Vector3 forward = transform.forward;
-
             Vector3 latVelocity = Vector3.Project(velocity, right);
             Vector3 longVelocity = Vector3.Project(velocity, forward);
             Vector3 planarVelocity = (longVelocity + latVelocity);
             float lateralFrictionMag = Vector3.Project(right, planarVelocity).magnitude * suspensionForce.magnitude / 9.8f / Time.fixedDeltaTime * lateralFrictionCoeff;
-            
             Vector3 lateralFriction = -latVelocity.normalized * lateralFrictionMag;
-
-            if (isGrounded)
+            if(isGrounded)
                 rigidbody.AddForceAtPosition(lateralFriction, hit.point);
-
-            if (Mathf.Abs(angularSlip) == 0.0f && Mathf.Abs(motorTorque) == 0.0f)
-                RollingFriction();
-            else if (Mathf.Abs(angularSlip) == 0.0f && Mathf.Abs(motorTorque) > 0.0f)
-                TorqueWithoutSlip();
-            else if (Mathf.Abs(angularSlip) > 0.0f && Mathf.Abs(motorTorque) > 0.0f)
-                TorqueWithSlip();
-            else if (Mathf.Abs(angularSlip) > 0.0f && Mathf.Abs(motorTorque) == 0.0f)
-                SlipWithoutTorque();
         }
-
+        
         public bool debug;
 
-        void UpdateSlip(float torque, bool dontChangeDirection = true) {
+        void Slip(float torque, bool dontChangeDirection = true) {
+            if (torque == 0f) return;
             bool slipWasZero = angularSlip == 0.0f;
             float acc = torque / MomentOfIntertia;
-            float delta = acc * Time.deltaTime;
+            float delta = acc * Time.fixedDeltaTime;
             angularSlip += delta;
             angularSlip = Mathf.Clamp(angularSlip, -9000, 9000);
 
@@ -259,58 +279,9 @@ namespace Adrenak.Tork {
             }
         }
 
-        void RollingFriction() {
-            Debug.Log("Roll with friction");
-            Vector3 forward = transform.forward;
-            float forwardSpeed = Vector3.Dot(velocity, forward);
-
-            Vector3 rollingFrictionDirection = -Mathf.Sign(forwardSpeed) * forward;
-            float rollingFrictionMag = suspensionForce.magnitude * rollingFrictionCoeff;
-
+        void Longitudinal(float force) {
             if(isGrounded)
-            rigidbody.AddForceAtPosition(rollingFrictionDirection * rollingFrictionMag, hit.point);
-        }
-
-        void TorqueWithoutSlip() {
-            Debug.Log("Torque without slip");
-            if (isGrounded)
-                rigidbody.AddForceAtPosition(transform.forward * ApplicableMotorForce, hit.point);
-
-            if (UnusedMotorForce > 0f)
-                UpdateSlip(Mathf.Sign(MotorForce) * UnusedMotorForce * radius);
-        }
-
-        void TorqueWithSlip() {
-            Debug.Log("Torque with slip");
-
-            Vector3 forward = transform.forward;
-
-            // If the torque applied is in the same direction as the slip
-            // we apply application motor force in driving the vehicle in
-            // the direction the motor torque wants. 
-            // If there is unused motor force, we spin the wheel even more
-            // If not, we slow down the spinning with the maximum friction
-            // available in the longitudinal direction
-            if (Mathf.Sign(angularSlip) == Mathf.Sign(motorTorque)) {
-                if (isGrounded)
-                    rigidbody.AddForceAtPosition(forward * ApplicableMotorForce, hit.point);
-
-                if (UnusedMotorForce > 0f) 
-                    UpdateSlip(Mathf.Sign(MotorForce) * UnusedMotorForce * radius);
-                else
-                    UpdateSlip(TotalFrictionForce, true);
-            }
-            // If the slip and motor torque are in opposite directions but the
-            // motor torque applied is opposite, all the torque is spent on
-            // bringing the slip to zero
-            else {
-                UpdateSlip(motorTorque, true);
-            }
-        }
-
-        void SlipWithoutTorque() {
-            Debug.Log("slip without torque");
-            UpdateSlip(suspensionForce.magnitude * longitudinalFrictionCoeff, true);
+                rigidbody.AddForceAtPosition(transform.forward * force, hit.point);
         }
         #endregion
     }
